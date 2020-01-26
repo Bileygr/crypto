@@ -8,7 +8,7 @@ class Authentification {
     public function __construct($id, $utilisateur, $mot_de_passe, $cle_secrete){
         $this->id = $id;
         $this->utilisateur = $utilisateur;
-        $this->mot_de_passe = password_hash($mot_de_passe, PASSWORD_BCRYPT);
+        $this->mot_de_passe = $mot_de_passe;
         $this->cle_secrete = $cle_secrete;
     }
 

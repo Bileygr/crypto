@@ -13,9 +13,9 @@ class Utilisateur {
 
     public function __construct($id, $actif, $authentification, $entreprise, $role, $nom, $prenom, $email, $telephone, $date_ajout){
         $this->id = $id;
-        if($actif=True){
+        if($actif=True || $actif=1){
             $this->actif = 1;
-        }elseif($actif=False){
+        }elseif($actif=False || $actif=0){
             $this->actif = 0;
         }
         $this->authentification = $authentification;

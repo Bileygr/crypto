@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS authentification;
 CREATE TABLE IF NOT EXISTS authentification (
   id SERIAL,
   utilisateur_id integer NOT NULL,
-  mot_de_passe varchar(60) NOT NULL,
+  mot_de_passe varchar(64) NOT NULL,
   cle_secrete varchar(20) NOT NULL,
   PRIMARY KEY (id)
 );
