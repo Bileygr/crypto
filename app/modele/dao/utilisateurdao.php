@@ -1,7 +1,7 @@
 <?php
 require_once("app/imports.php");
 
-class UtilisateurDAO {
+class UtilisateurDAO implements DAO {
     public function find($option){
         $connect = new Connect;
 		$bdd = $connect->connexion();

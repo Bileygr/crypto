@@ -1,7 +1,10 @@
 <?php
 require_once("app/imports.php");
 
-class AuthentificationDAO{
+class AuthentificationDAO implements DAO{
+    public function find($option){
+    }
+
     public function persist($authentification){
         $connect = new Connect;
         $bdd = $connect->connexion();

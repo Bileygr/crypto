@@ -1,7 +1,7 @@
 <?php
 require_once("app/imports.php");
 
-class EntrepriseDAO {
+class EntrepriseDAO implements DAO {
     public function find($option){
         $connect = new Connect;
 		$bdd = $connect->connexion();
@@ -52,6 +52,10 @@ class EntrepriseDAO {
 		}
 
 		return $entreprises;
+    }
+
+    public function persist($entreprise){
+        
     }
 }
 ?>

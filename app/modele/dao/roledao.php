@@ -1,7 +1,7 @@
 <?php
 require_once("app/imports.php");
 
-class RoleDAO {
+class RoleDAO implements DAO {
     public function find($option){
         $connect = new Connect;
 		$bdd = $connect->connexion();
@@ -29,6 +29,10 @@ class RoleDAO {
 		}
 
 		return $roles;
-    }
+	}
+	
+	public function persist($role){
+
+	}
 }
 ?>
