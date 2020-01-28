@@ -5,7 +5,7 @@ session_start();
 class ControlleurDefaut {
     public function verification(){
         if(!isset($_SESSION["utilisateur"])){
-            header("Location: login.php");
+            header("Location: connexion.php");
         }
     }
 
