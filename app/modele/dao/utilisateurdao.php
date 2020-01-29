@@ -2,6 +2,10 @@
 require_once("app/imports.php");
 
 class UtilisateurDAO implements DAO {
+    public function delete($option){
+
+    }
+
     public function find($option){
         $connect = new Connect;
 		$bdd = $connect->connexion();
@@ -93,28 +97,37 @@ class UtilisateurDAO implements DAO {
         $connect = new Connect;
         $authentificationdao = new AuthentificationDAO;
         $bdd = $connect->connexion();
-        $requete = $bdd->prepare("INSERT INTO utilisateur(actif, entreprise_id, role_id, nom, prenom, email, telephone) 
-                                    VALUES(?, ?, ?, ?, ?, ?, ?)");
+        $requete = $bdd->prepare("INSERT INTO utilisateur(utilisateur_actif, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone,
+                                                            utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) 
+                                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         $requete->execute([
             $utilisateur->getActif(),
-            $utilisateur->getEntreprise()->getId(),
             $utilisateur->getRole()->getId(),
+            $utilisateur->getSpecialisation()->getId(),
             $utilisateur->getNom(),
             $utilisateur->getPrenom(),
             $utilisateur->getEmail(),
-            $utilisateur->getTelephone()
+            $utilisateur->getTelephone(),
+            $utilisateur->getNumeroderue(),
+            $utilisateur->getRue(),
+            $utilisateur->getVille(),
+            $utilisateur->getCodepostal()
         ]);
         
-        $requete = $bdd->prepare("SELECT id FROM utilisateur WHERE email=?");
+        $requete = $bdd->prepare("SELECT utilisateur_id FROM utilisateur WHERE utilisateur_email=?");
         $requete->execute([$utilisateur->getEmail()]);
-        $utilisateur->setId($requete->fetch()["id"]);
+        $utilisateur->setId($requete->fetch()["utilisateur_id"]);
         $authentification = $utilisateur->getAuthentification();
         $authentification->setUtilisateur($utilisateur);
         $authentificationdao->persist($authentification);
 
-        $bdd=null;
-        $connect=null;
+        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        $connect = null;
+    }
+
+    public function update($utilisateur){
+
     }
 }
 ?>

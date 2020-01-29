@@ -1,6 +1,8 @@
 <?php
 interface DAO {
-    public function find($array);
-    public function persist($classe);
+    public function delete($classe_metier);
+    public function find($tableau);
+    public function persist($classe_metier);
+    public function update($classe_metier);
 }
 ?>

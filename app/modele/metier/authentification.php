@@ -1,19 +1,13 @@
 <?php
 class Authentification {
-    private $id;
     private $utilisateur;
     private $mot_de_passe;
     private $cle_secrete;
 
-    public function __construct($id, $utilisateur, $mot_de_passe, $cle_secrete){
-        $this->id = $id;
+    public function __construct($utilisateur, $mot_de_passe, $cle_secrete){
         $this->utilisateur = $utilisateur;
         $this->mot_de_passe = $mot_de_passe;
         $this->cle_secrete = $cle_secrete;
-    }
-
-    public function getId(){
-        return $this->id;
     }
 
     public function getUtilisateur(){
@@ -26,10 +20,6 @@ class Authentification {
 
     public function getClesecrete(){
         return $this->cle_secrete;
-    }
-
-    public function setId($id){
-        $this->id = $id;
     }
 
     public function setUtilisateur($utilisateur){

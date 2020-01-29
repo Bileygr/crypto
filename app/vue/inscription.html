@@ -13,11 +13,11 @@
             <label for="prenom">Prénom</label>
             <input type="text" name="prenom" id="prenom" placeholder="Prénom"><br>
 
-            <label for="motdepasse">Mot de passe</label>
-            <input type="password" name="motdepasse" id="motdepasse" placeholder="Mot de passe"><br>
+            <label for="mot_de_passe">Mot de passe</label>
+            <input type="password" name="mot_de_passe" id="mot_de_passe" placeholder="Mot de passe"><br>
 
-            <label for="motdepasse_2">Confirmation du mot de passe</label>
-            <input type="password" name="motdepasse_2" id="motdepasse_2" placeholder="Confirmation du mot de passe"><br>
+            <label for="confirmation_du_mot_de_passe">Confirmation du mot de passe</label>
+            <input type="password" name="confirmation_du_mot_de_passe" id="confirmation_du_mot_de_passe" placeholder="Confirmation du mot de passe"><br>
 
             <label for="email">Email</label>
             <input type="email" name="email" id="email" placeholder="Email"><br>
@@ -25,21 +25,41 @@
             <label for="telephone">Téléphone</label>
             <input type="text" name="telephone" id="telephone" placeholder="Téléphone"><br>
 
-            <label for="entreprise">Entreprise</label>
-            <select id="entreprise" name="entreprise">
-                {{ entreprises }}
-            </select><br>
+            <label for="numero_de_rue">Numéro de rue</label>
+            <input type="text" name="numero_de_rue" id="numero_de_rue" placeholder="Numéro de rue"><br>
+
+            <label for="rue">Rue</label>
+            <input type="text" name="rue" id="rue" placeholder="Rue"><br>
+
+            <label for="ville">Ville</label>
+            <input type="text" name="ville" id="ville" placeholder="ville"><br>
+
+            <label for="code_postal">Code postal</label>
+            <input type="number" name="code_postal" id="code_postal" placeholder="Code postal"><br>
 
             <label for="role">Rôle</label>
             <select id="role" name="role">
                 {{ roles }}
             </select><br>
 
+            <div id="div_specialisation" style="display: none;">
+                <label for="specialisation" >Spécialisation</label>
+                <select id="specialisation" name="specialisation">
+                    <option value=""></option>
+                    {{ specialisations }}
+                </select><br>
+            </div>
+    
             <input type="submit" name="inscrire" value="Inscription"><br>
 
-            {{ secret }}
-
-            {{ qr }}
+            {{ code qr }}
         </form>
+
+        <script>
+            document.getElementById('role').addEventListener('change', function () {
+                var style = this.value == 3 ? 'block' : 'none';
+                document.getElementById('div_specialisation').style.display = style;
+            });
+        </script>
     </body>
 </html>

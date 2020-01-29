@@ -1,11 +1,13 @@
 /*
-  * Script de création de la base de données du projet "Soteria" pour le module de SQL.
+  * Script de création des tables de la base de données du projet "crypto" pour le module de SQL.
   * Par Matthieu Drisse et Cheik-Siramakan Keita
   * Pour monsieur Palacios
   * 2019-2020
 */
 
-DROP TABLE IF EXISTS authentification;
+--CREATE DATABASE asclepius;
+
+DROP TABLE IF EXISTS authentification CASCADE;
 CREATE TABLE IF NOT EXISTS authentification (
   utilisateur_id integer NOT NULL UNIQUE,
   authentification_mot_de_passe varchar(64) NOT NULL,
@@ -13,7 +15,7 @@ CREATE TABLE IF NOT EXISTS authentification (
   PRIMARY KEY (utilisateur_id)
 );
 
-DROP TABLE IF EXISTS consultation;
+DROP TABLE IF EXISTS consultation CASCADE;
 CREATE TABLE IF NOT EXISTS consultation (
   consultation_id SERIAL,
   consultation_doc_id integer NOT NULL,
@@ -24,7 +26,7 @@ CREATE TABLE IF NOT EXISTS consultation (
   PRIMARY KEY (consultation_id)
 );
 
-DROP TABLE IF EXISTS diagnostique;
+DROP TABLE IF EXISTS diagnostique CASCADE;
 CREATE TABLE IF NOT EXISTS diagnostique(
   consultation_id integer NOT NULL UNIQUE,
   maladie_id integer,
@@ -33,20 +35,20 @@ CREATE TABLE IF NOT EXISTS diagnostique(
   PRIMARY KEY (consultation_id)
 );
 
-DROP TABLE IF EXISTS liste_des_medicaments;
+DROP TABLE IF EXISTS liste_des_medicaments CASCADE;
 CREATE TABLE IF NOT EXISTS liste_des_medicaments (
   traitement_id integer,
   medicament_id integer NOT NULL,
   medicament_dose float NOT NULL
 );
 
-DROP TABLE IF EXISTS liste_des_symptomes;
+DROP TABLE IF EXISTS liste_des_symptomes CASCADE;
 CREATE TABLE IF NOT EXISTS liste_des_symptomes (
   maladie_id integer NOT NULL,
   symptome_id integer NOT NULL
 );
 
-DROP TABLE IF EXISTS maladie;
+DROP TABLE IF EXISTS maladie CASCADE;
 CREATE TABLE IF NOT EXISTS maladie (
   maladie_id SERIAL,
   maladie_nom varchar(50) NOT NULL,
@@ -55,14 +57,14 @@ CREATE TABLE IF NOT EXISTS maladie (
   PRIMARY KEY (maladie_id)
 );
 
-DROP TABLE IF EXISTS medicament;
+DROP TABLE IF EXISTS medicament CASCADE;
 CREATE TABLE IF NOT EXISTS medicament (
   medicament_id SERIAL,
   medicament_nom varchar(50) NOT NULL,
   PRIMARY KEY (medicament_id)
 );
 
-DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS role CASCADE;
 CREATE TABLE IF NOT EXISTS role (
   role_id SERIAL,
   role_nom varchar(50) NOT NULL,
@@ -76,7 +78,7 @@ INSERT INTO role(role_id, role_nom) VALUES
 (4, 'Administration'),
 (5, 'Chercheur');
 
-DROP TABLE IF EXISTS symptome;
+DROP TABLE IF EXISTS symptome CASCADE;
 CREATE TABLE IF NOT EXISTS symptome (
   symptome_id SERIAL,
   symptome_nom varchar(50) NOT NULL,
@@ -84,24 +86,71 @@ CREATE TABLE IF NOT EXISTS symptome (
   PRIMARY KEY (symptome_id)
 );
 
-DROP TABLE IF EXISTS specialisation;
+DROP TABLE IF EXISTS specialisation CASCADE;
 CREATE TABLE specialisation(
   specialisation_id serial,
-  specialisation_nom varchar(50) UNIQUE,
+  specialisation_nom varchar(250) UNIQUE,
   PRIMARY KEY (specialisation_id)
 );
 
-DROP TABLE IF EXISTS traitement;
+INSERT INTO specialisation(specialisation_id, specialisation_nom) VALUES
+(1, 'Allergologie'),
+(2, 'Anesthésie-Réanimation'),
+(3, 'Anatomie et Cytologie pathologiques'),
+(4, 'Biologie médicale'),
+(5, 'Chirurgie Maxillo-Faciale'),
+(6, 'Chirurgie Orale'),
+(7, 'Chirurgie Orthopédique et traumatologique'),
+(8, 'Chirurgie Pédiatrique'),
+(9, 'Chirurgie plastique, reconstructrice et esthétique'),
+(10, 'Chirurgie Thoracique et Cardio-Vasculaire'),
+(11, 'Chirurgie Vasculaire'),
+(12, 'Chirurgie Viscérale et Digestive'),
+(13, 'Dermatologie – Vénérologie'),
+(14, 'Endocrinologie, diabétologie et nutrition'),
+(15, 'Génétique médicale'),
+(16, 'Gériatrie'),
+(17, 'Gynécologie médicale'),
+(18, 'Gynécologie – Obstétrique'),
+(19, 'Hématologie'),
+(20, 'Hépato-gastro-entérologie'),
+(21, 'Maladies Infectieuses et Tropicales'),
+(22, 'Médecine Cardiovasculaire'),
+(23, 'Médecine Générale'),
+(24, 'Médecine Intensive-Réanimation'),
+(25, 'Médecine Interne et Immunologie clinique'),
+(26, 'Médecine Légale et expertise médicale'),
+(27, 'Médecine Nucléaire'),
+(28, 'Médecine Physique et Réadaptation'),
+(29, 'Médecine et Santé au Travail'),
+(30, 'Médecine Vasculaire'),
+(31, 'Médecine d’Urgence'),
+(32, 'Néphrologie'),
+(33, 'Neurochirurgie'),
+(34, 'Neurologie'),
+(35, 'Oncologie : Option précoce – Oncologie Médicale'),
+(36, 'Oncologie : Option précoce – Radiothérapie'),
+(37, 'Ophtalmologie'),
+(38, 'Oto-rhino-laryngologie et chirurgie cervico-faciale'),
+(39, 'Pédiatrie'),
+(40, 'Pneumologie'),
+(41, 'Psychiatrie'),
+(42, 'Radiologie et Imagerie Médicale'),
+(43, 'Rhumatologie'),
+(44, 'Santé publique'),
+(45, 'Urologie');
+
+DROP TABLE IF EXISTS traitement CASCADE;
 CREATE TABLE IF NOT EXISTS traitement (
   traitement_id SERIAL,
   traitement_description text,
   PRIMARY KEY (traitement_id)
 );
 
-DROP TABLE IF EXISTS utilisateur;
+DROP TABLE IF EXISTS utilisateur CASCADE;
 CREATE TABLE IF NOT EXISTS utilisateur (
   utilisateur_id SERIAL,
-  utilisatuer_actif boolean,
+  utilisateur_actif boolean,
   role_id integer NOT NULL,
   specialisation_id integer,
   utilisateur_nom varchar(50) NOT NULL,

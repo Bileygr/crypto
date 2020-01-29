@@ -1,6 +1,6 @@
 <?php
 class Connect{
-	public function Connexion(){
+	public function connexion(){
 		$settings = parse_ini_file("settings.ini", true);
 		$host = $settings["database"]["host"];
 		$port = $settings["database"]["port"];
@@ -15,6 +15,11 @@ class Connect{
 		}
 		
 		return $db;
+	}
+
+	public function deconnexion($connect){
+		$connect->query("SELECT pg_terminate_backend(pg_backend_pid())");
+        $connect = null;
 	}
 }
 ?>

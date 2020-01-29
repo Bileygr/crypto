@@ -3,95 +3,67 @@ class Consultation {
     private $id;
     private $docteur;
     private $patient;
-    private $maladie;
+    private $diagnostique;
     private $prix;
+    private $date;
 
-    public function __construct($id, $docteur, $patient, $maladie, $prix){
+    public function __construct($id, $docteur, $patient, $diagnostique, $prix, $date){
         $this->id = $id;
         $this->docteur = $docteur;
         $this->patient = $patient;
-        $this->maladie = $maladie;
+        $this->maladie = $diagnostique;
         $this->prix = $prix;
+        $this->date = $date;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
+    public function getId(){
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     */
+    public function getDocteur(){
+        return $this->docteur;
+    }
+
+    public function getPatient(){
+        return $this->patient;
+    }
+
+    public function getDiagnostique(){
+        return $this->diagnostique;
+    }
+
+    public function getPrix(){
+        return $this->prix;
+    }
+
+    public function getDate(){
+        return $this->date;
+    }
+
     public function setId($id)
     {
         $this->id = $id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDocteur()
-    {
-        return $this->docteur;
-    }
-
-    /**
-     * @param mixed $docteur
-     */
     public function setDocteur($docteur)
     {
         $this->docteur = $docteur;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPatient()
-    {
-        return $this->patient;
-    }
-
-    /**
-     * @param mixed $patient
-     */
-    public function setPatient($patient)
-    {
+    public function setPatient($patient){
         $this->patient = $patient;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMaladie()
-    {
-        return $this->maladie;
+    public function setDiagnostique($diagnostique){
+        $this->diagnostique = $diagnostique;
     }
 
-    /**
-     * @param mixed $maladie
-     */
-    public function setMaladie($maladie)
-    {
-        $this->maladie = $maladie;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrix()
-    {
-        return $this->prix;
-    }
-
-    /**
-     * @param mixed $prix
-     */
-    public function setPrix($prix)
-    {
+    public function setPrix($prix){
         $this->prix = $prix;
+    }
+
+    public function setDate($date){
+        $this->date = $date;
     }
 }
 ?>

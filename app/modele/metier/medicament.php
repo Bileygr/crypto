@@ -1,5 +1,5 @@
 <?php
-class Role {
+class Medicament{
     private $id;
     private $nom;
 
@@ -15,11 +15,11 @@ class Role {
     public function getNom(){
         return $this->nom;
     }
-    
+
     public function setId($id){
         $this->id = $id;
     }
-    
+
     public function setNom($nom){
         $this->nom = $nom;
     }

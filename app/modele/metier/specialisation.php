@@ -1,5 +1,5 @@
 <?php
-class Role {
+class Specialisation{
     private $id;
     private $nom;
 

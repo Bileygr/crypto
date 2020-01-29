@@ -18,14 +18,15 @@ class ControlleurDefaut {
 
         if(isset($_POST["connecter"])){
             $email = $_POST["email"];
-            $motdepasse = $_POST["motdepasse"];
+            $mot_de_passe = $_POST["mot_de_passe"];
 
-            if(!empty($email) && !empty($motdepasse)){
+            if(!empty($email) && !empty($mot_de_passe)){
+                
                 if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                     $utilisateurdao = new UtilisateurDAO;
-                    $utilisateurs = $utilisateurdao->find(["option"=>"email", "valeur"=>$email]);
-                    $utilisateur = $utilisateurs[0];
-                    if(password_verify("test", $utilisateur->getAuthentification()->getMotdepasse())){
+                    $utilisateur = $utilisateurdao->find(["option"=>"email", "valeur"=>$email])[0];
+                    
+                    if(password_verify($mot_de_passe, $utilisateur->getAuthentification()->getMotdepasse())){
                        $_SESSION["utilisateur"] = $utilisateur;
                        $_SESSION["valide"]=False;
                        header("Location: code.php");
@@ -103,74 +104,94 @@ class ControlleurDefaut {
     }
 
     public function inscription(){
-        $moteur = new Moteur;
         $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
-        $entreprisedao = new EntrepriseDAO;
+        $moteur = new Moteur;
         $roledao = new RoleDAO;
+        $specialisationdao = new SpecialisationDAO;
         $utilisateurdao = new UtilisateurDAO;
 
-        $lesentreprises = $entreprisedao->find(["option"=>"", "valeur"=>""]); 
-        $entreprises = "";
-        
-        foreach ($lesentreprises as $entreprise) {
-			$entreprises .= '<option value="'.$entreprise->getId().'">'.$entreprise->getNom().'</option>';
-		}
-
         $lesroles = $roledao->find(["option"=>"", "valeur"=>""]); 
-		$roles = "";
+        $lesspecialisations = $specialisationdao->find(["option"=>"", "valeur"=>""]); 
+
+        $roles = "";
+        $specialisations = "";
 
 		foreach ($lesroles as $role) {
-			$roles .= '<option value="'.$role->getId().'">'.$role->getTitre().'</option>';
+			$roles .= '<option value="'.$role->getId().'">'.$role->getNom().'</option>';
+		}
+        
+        foreach ($lesspecialisations as $specialisation) {
+			$specialisations .= '<option value="'.$specialisation->getId().'">'.$specialisation->getNom().'</option>';
 		}
 
-        $moteur->assigner("secret", "");
-        $moteur->assigner("qr", "");
-        $moteur->assigner("entreprises", $entreprises);
+        $moteur->assigner("code qr", "");
         $moteur->assigner("roles", $roles);
+        $moteur->assigner("specialisations", $specialisations);
 
         if(isset($_POST["inscrire"])){
-            $nom = $_POST["nom"];
-            $prenom = $_POST["prenom"];
-            $motdepasse = $_POST["motdepasse"];
-            $motdepasse_conf = $_POST["motdepasse_2"];
+            $code_postal = $_POST["code_postal"];
+            $confirmation_du_mot_de_passe = $_POST["confirmation_du_mot_de_passe"];
             $email = $_POST["email"];
+            $mot_de_passe = $_POST["mot_de_passe"];
+            $nom = $_POST["nom"];
+            $numero_de_rue = $_POST["numero_de_rue"];
+            $prenom = $_POST["prenom"];
+            $role = $_POST["role"];
+            $rue = $_POST["rue"];
+            $specialisation = $_POST["specialisation"];
             $telephone = $_POST["telephone"];
-            $entreprise_id = $_POST["entreprise"];
-            $role_id = $_POST["role"];
+            $ville = $_POST["ville"];
 
-            if(!empty($nom) && !empty($prenom) && !empty($motdepasse) && !empty($motdepasse_conf) 
-                && !empty($email) && !empty($telephone) && !empty($entreprise_id) && !empty($role_id)){
+            if(!empty($code_postal) && !empty($confirmation_du_mot_de_passe) && 
+                !empty($email) && !empty($mot_de_passe) && !empty($nom) && 
+                !empty($numero_de_rue) && !empty($prenom) && !empty($role) && 
+                !empty($rue) && !empty($telephone) && !empty($ville)){
+                
                 if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+                    
                     if(strlen($telephone) == 10){
-                        if($motdepasse == $motdepasse_conf){
-                            $websiteTitle = 'Asclepius ('.$email.')';
+                        
+                        if($mot_de_passe == $confirmation_du_mot_de_passe){
                             $cle_secrete = $googleAuthenticator->createSecret();
-                            $qrCodeUrl = $googleAuthenticator->getQRCodeGoogleUrl($websiteTitle, $cle_secrete);
-                            $qr = 
+                            $titre = 'Asclepius ('.$email.')';
+                            $url_du_code_qr = $googleAuthenticator->getQRCodeGoogleUrl($titre, $cle_secrete);
+                            
+                            $code_qr = 
                                 "
                                     <h2>Scannez votre code!</h2>
                                     Code QR <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en\" target=\"_blank\">Google Authenticator</a> : 
                                     <br/>
-                                    <img src=".$qrCodeUrl."/>
+                                    <img src=".$url_du_code_qr."/>
                                     <br/>
                                     <p>Inscription réussie! -> <a href=\"connexion.php\">Clicquez ici!</a></p>
                                 ";
-                            $moteur->assigner("qr", $qr);
-                            $entreprise = $entreprisedao->find(["option"=>"id", "valeur"=>$entreprise_id]);
-                            $role = $roledao->find(["option"=>"id", "valeur"=>$role_id]);
-                            $authentification = new Authentification(null, null, null, $cle_secrete);
-                            $authentification->setMotdepasse($motdepasse);
+                            
+                            $moteur->assigner("code qr", $code_qr);
+
+                            $authentification = new Authentification(null, null, $cle_secrete);
+                            $authentification->setMotdepasse($mot_de_passe);
+                            $role = $roledao->find(["option"=>"id", "valeur"=>$role])[0];
+
+                            if(!empty($specialisation)){
+                                $specialisation = $specialisationdao->find(["option"=>"id", "valeur"=>$specialisation])[0];
+                            }else{
+                                $specialisation = new Specialisation(null, null);
+                            }
 
                             $utilisateur = new Utilisateur(
                                 null,
                                 False,
+                                $role,
+                                $specialisation,
                                 $authentification,
-                                $entreprise[0],
-                                $role[0],
                                 $nom,
                                 $prenom,
                                 $email,
                                 $telephone,
+                                $numero_de_rue,
+                                $rue,
+                                $ville,
+                                $code_postal,
                                 null
                             );
 
