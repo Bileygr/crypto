@@ -9,7 +9,6 @@ class ControlleurDefaut {
         }
     }
 
-
     public function connexion(){
         $moteur = new Moteur;
 
@@ -24,14 +23,19 @@ class ControlleurDefaut {
                 
                 if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                     $utilisateurdao = new UtilisateurDAO;
-                    $utilisateur = $utilisateurdao->find(["option"=>"email", "valeur"=>$email])[0];
-                    
-                    if(password_verify($mot_de_passe, $utilisateur->getAuthentification()->getMotdepasse())){
-                       $_SESSION["utilisateur"] = $utilisateur;
-                       $_SESSION["valide"]=False;
-                       header("Location: code.php");
+                    $utilisateur = $utilisateurdao->find(["option"=>"email", "valeur"=>$email]);
+                    var_dump($utilisateur);
+                    exit;
+                    if(!empty($utilisateur)){
+                        if(password_verify($mot_de_passe, $utilisateur->getAuthentification()->getMotdepasse())){
+                        $_SESSION["utilisateur"] = $utilisateur;
+                        $_SESSION["validite"]=False;
+                        header("Location: code.php");
+                        }else{
+                            $moteur->assigner("message", "<b>Mauvaises informations de connexion.</b>");
+                        }
                     }else{
-                        $moteur->assigner("message", "<b>Mauvaises informations de connexion.</b>");
+                        $moteur->assigner("message", "<b>Mauvaises informations de connexion (a).</b>");
                     }
                 }else{
                     $moteur->assigner("message", "<b>Vérifiez le format de votre adresse email.</b>");

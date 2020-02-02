@@ -8,88 +8,118 @@ class UtilisateurDAO implements DAO {
 
     public function find($option){
         $connect = new Connect;
-		$bdd = $connect->connexion();
-		$resultat;
+        $bdd = $connect->connexion();
+        $resultat;
 
         $sql = 
         "
-        SELECT utilisateur.id AS user_id, utilisateur.actif AS user_actif, utilisateur.nom AS user_nom, utilisateur.prenom AS user_prenom, 
-                utilisateur.email AS user_email, utilisateur.telephone AS user_telephone, utilisateur.date_ajout AS user_date, authentification.id AS auth_id, 
-                authentification.mot_de_passe AS auth_motdepasse, authentification.cle_secrete AS auth_cle_secrete, entreprise.id AS ent_id, entreprise.siret AS ent_siret, 
-                entreprise.nom AS ent_nom, entreprise.email AS ent_email, entreprise.telephone AS ent_telephone, entreprise.date AS ent_date, 
-                role.id AS role_id, role.titre AS role_titre  
-        FROM utilisateur 
-        JOIN authentification ON utilisateur.id=authentification.utilisateur_id 
-        JOIN entreprise ON utilisateur.entreprise_id=entreprise.id 
-        JOIN role ON utilisateur.role_id=role.id
+            SELECT utilisateur.utilisateur_id, utilisateur.utilisateur_actif, utilisateur.utilisateur_nom, utilisateur.utilisateur_prenom,
+		            utilisateur.utilisateur_email, utilisateur.utilisateur_telephone, utilisateur.utilisateur_numero_de_rue, utilisateur.utilisateur_rue,
+		            utilisateur.utilisateur_ville, utilisateur.utilisateur_code_postal, utilisateur.utilisateur_date, role.role_id, role.role_nom,
+		            specialisation.specialisation_id, specialisation.specialisation_nom, authentification.authentification_mot_de_passe, 
+		            authentification.authentification_cle_secrete
+            FROM utilisateur
+            JOIN role ON utilisateur.role_id=role.role_id
+            JOIN specialisation ON utilisateur.specialisation_id = specialisation.specialisation_id
+            JOIN authentification ON utilisateur.utilisateur_id = authentification.utilisateur_id
         ";
 
 		switch ($option["option"]) {
 			case 'id':
-				$requete = $bdd->prepare($sql."WHERE id=:valeur");
+				$requete = $bdd->prepare($sql."WHERE utilisateur.utilisateur_id=:valeur");
 				$requete->execute(["valeur" => $option["valeur"]]);
 				break;
 			case 'nom':
-				$requete = $bdd->prepare($sql." WHERE nom=:valeur");
+				$requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_nom=:valeur");
 				$requete->execute(["valeur" => $option["valeur"]]);
                 break;
             case 'prenom':
-                $requete = $bdd->prepare($sql." WHERE prenom=:valeur");
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_prenom=:valeur");
                 $requete->execute(["valeur" => $option["valeur"]]);
                 break;
             case 'email':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.email=:valeur");
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_email=:valeur");
                 $requete->execute(["valeur" => $option["valeur"]]);
                 break;
             case 'telephone':
-                $requete = $bdd->prepare($sql." telephone=:valeur");
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_telephone=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'numéro de rue':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_numero_de_rue=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'rue':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_rue=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'ville':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_ville=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'code postal':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_code_postal=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'date':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_date=:valeur");
                 $requete->execute(["valeur" => $option["valeur"]]);
                 break;
 			default:
 				$requete = $bdd->prepare($sql);
 				$requete->execute();
 				break;
-		}
+        }
 
-		$utilisateurs = array();
+        $resultat = $requete->fetch();
+        
+        var_dump($resultat);
 
-		for($i=0; $utilisateur=$requete->fetch(); $i++){
-            $entreprise = new Entreprise(
-                $utilisateur['ent_id'],
-                $utilisateur['ent_siret'],
-                $utilisateur['ent_nom'],
-                $utilisateur['ent_email'],
-                $utilisateur['ent_telephone'],
-                $utilisateur['ent_date']
-            );
+        $utilisateurs = array();
 
-            $role = new Role(
-                $utilisateur['role_id'],
-                $utilisateur['role_titre']
-            );
+        //if($resultat){
+            for($i=0; $utilisateur=$requete->fetch(); $i++){
+                $role = new Role(
+                    $utilisateur['role_id'],
+                    $utilisateur['role_nom']
+                );
 
-            $authentification = new Authentification(
-                $utilisateur['auth_id'],
-                null,
-                $utilisateur['auth_motdepasse'],
-                $utilisateur['auth_cle_secrete']
-            );
+                $specialisation = new specialisation(
+                    $utilisateur['specialisation_id'],
+                    $utilisateur['specialisation_nom']
+                );
 
-			$utilisateurs[$i] = new Utilisateur(
-                $utilisateur['user_id'],
-                $utilisateur['user_actif'],
-                $authentification,
-                $entreprise,
-                $role,
-                $utilisateur['user_nom'],
-                $utilisateur['user_prenom'],
-                $utilisateur['user_email'],
-                $utilisateur['user_telephone'],
-                $utilisateur['user_date']
-            );
+                $authentification = new Authentification(
+                    null,
+                    $utilisateur['authentification_motdepasse'],
+                    $utilisateur['authentification_cle_secrete']
+                );
 
-            $authentification->setUtilisateur($utilisateurs[$i]);
-		}
+                $utilisateurs[$i] = new Utilisateur(
+                    $utilisateur['utilisateur_id'],
+                    $utilisateur['utilisateur_actif'],
+                    $role,
+                    $specialisation,
+                    $authentification,
+                    $utilisateur['utilisateur_nom'],
+                    $utilisateur['utilisateur_prenom'],
+                    $utilisateur['utilisateur_email'],
+                    $utilisateur['utilisateur_telephone'],
+                    $utilisateur['utilisateur_numero_de_rue'],
+                    $utilisateur['utilisateur_rue'],
+                    $utilisateur['utilisateur_ville'],
+                    $utilisateur['utilisateur_code_postal'],
+                    $utilisateur['utilisateur_date']
+                );
+
+                $authentification->setUtilisateur($utilisateurs[$i]);
+            }
+        //}
+
+        var_dump($utilisateurs);
+
+        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        $connect = null;
 		return $utilisateurs;
     }
 

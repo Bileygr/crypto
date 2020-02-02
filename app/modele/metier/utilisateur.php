@@ -24,7 +24,11 @@ class Utilisateur {
             $this->actif = 0;
         }
         $this->role = $role;
-        $this->specialisation = $specialisation;
+        if(!empty($specialisation->getId())){
+            $this->specialisation = $specialisation;
+        }else{
+            $this->specialisation = null;
+        }
         $this->authentification = $authentification;
         //$this->liste_des_consultations = $liste_des_consultations;
         $this->nom = $nom;
