@@ -93,7 +93,7 @@ class ControlleurDefaut {
             if(!empty($code)){
                 $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
                 if($googleAuthenticator->verifyCode($utilisateur->getAuthentification()->getClesecrete(), $code)) {
-                    $_SESSION["valide"]=True;
+                    $_SESSION["validite"]=True;
                     header("Location: index.php");
                 }else {
                     $moteur->assigner("message", "<b>Mauvais code.</b>");
@@ -116,18 +116,26 @@ class ControlleurDefaut {
         $moteur = new Moteur;
         $moteur->assigner("message", "");
 
-        if(isset($_SESSION["utilisateur"])){
+        if(isset($_SESSION["utilisateur"]) && $_SESSION["validite"]==True){
             $utilisateur = $_SESSION["utilisateur"];
 
-            $contenu = 
-            "
-                <p><b>Rôle : </b>".$utilisateur->getRole()->getNom()."</p>
-            ";
+            if($utilisateur->getRole()->getId() == 3){
+                $contenu = 
+                "
+                    <p><b>Rôle : </b>".$utilisateur->getRole()->getNom()."</p>
+                    <p><b>Spécialisation : </b>".$utilisateur->getSpecialisation()->getNom()."</p>
+                ";
+            }else{
+                $contenu = 
+                "
+                    <p><b>Rôle : </b>".$utilisateur->getRole()->getNom()."</p>
+                ";
+            }
 
             $moteur->assigner("titre", "Bienvenue ".$utilisateur->getPrenom()." ".$utilisateur->getPrenom());
             $moteur->assigner("connexion", "");
             $moteur->assigner("inscription", "");
-            $moteur->assigner("deconnexion", "<a href=\"deconnexion.php\">Déconnexion</a>");
+            $moteur->assigner("deconnexion", "<a href=\"modifier-vos-informations.php\">Modifier vos informations</a> <a href=\"deconnexion.php\">Déconnexion</a>");
             $moteur->assigner("contenu", $contenu);
         }else{
             $moteur->assigner("titre", "Accueil");
@@ -153,11 +161,11 @@ class ControlleurDefaut {
         $roles = "";
         $specialisations = "";
 
-		for ($i; $role=$lesroles; $i++) {
+		foreach($lesroles as $role) {
 			$roles .= '<option value="'.$role["role_id"].'">'.$role["role_nom"].'</option>';
 		}
         
-        foreach ($lesspecialisations as $specialisation) {
+        foreach($lesspecialisations as $specialisation) {
             $specialisations .= '<option value="'.$specialisation["specialisation_id"].'">'.$specialisation["specialisation_nom"].'</option>';
 		}
 
@@ -209,9 +217,11 @@ class ControlleurDefaut {
                             $authentification = new Authentification(null, null, $cle_secrete);
                             $authentification->setMotdepasse($mot_de_passe);
                             $role = $roledao->read(["option"=>"id", "valeur"=>$role])[0];
+                            $role = new Role($role["role_id"], $role["role_nom"]);
 
                             if(!empty($specialisation)){
                                 $specialisation = $specialisationdao->read(["option"=>"id", "valeur"=>$specialisation])[0];
+                                $specialisation = new Specialisation($specialisation["specialisation_id"],$specialisation["specialisation_nom"]);
                             }else{
                                 $specialisation = new Specialisation(null, null);
                             }

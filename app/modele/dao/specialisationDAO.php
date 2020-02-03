@@ -29,7 +29,7 @@ class SpecialisationDAO implements CRUD {
 
 		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
         $connect = null;
-		return $requete->fetch();
+		return $requete->fetchAll();
     }
 
     public function update($specialisation){

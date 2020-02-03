@@ -10,7 +10,7 @@ class UtilisateurDAO implements CRUD {
         $requete = $bdd->prepare("INSERT INTO utilisateur(utilisateur_actif, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone,
                                                             utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) 
                                     VALUES(:actif, :role, :specialisation, :nom, :prenom, :email, :telephone, :numero_de_rue, :rue, :ville, :code_postal)");
-        $requete->execute([
+        $resultat = $requete->execute([
             "actif"=>$utilisateur->getActif(),
             "role"=>$utilisateur->getRole()->getId(),
             "specialisation"=>$utilisateur->getSpecialisation()->getId(),
@@ -24,13 +24,9 @@ class UtilisateurDAO implements CRUD {
             "code_postal"=>$utilisateur->getCodepostal()
         ]);
         
-        $resultat = UtilisateurDAO::read(["email"=>$utilisateur->getEmail()]);
-
-        /*
-            $requete = $bdd->prepare("SELECT utilisateur_id FROM utilisateur WHERE utilisateur_email=?");
-            $requete->execute([$utilisateur->getEmail()]);
-        */
-        $utilisateur->setId($resultat["utilisateur_id"]);
+        $requete = $bdd->prepare("SELECT utilisateur_id FROM utilisateur WHERE utilisateur_email=?");
+        $requete->execute([$utilisateur->getEmail()]);
+        $utilisateur->setId($requete->fetch()["utilisateur_id"]);
         $authentification = $utilisateur->getAuthentification();
         $authentification->setUtilisateur($utilisateur);
         $authentificationdao->create($authentification);
