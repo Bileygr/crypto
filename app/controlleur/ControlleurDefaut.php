@@ -23,14 +23,48 @@ class ControlleurDefaut {
                 
                 if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                     $utilisateurdao = new UtilisateurDAO;
-                    $utilisateur = $utilisateurdao->find(["option"=>"email", "valeur"=>$email]);
-                    var_dump($utilisateur);
-                    exit;
-                    if(!empty($utilisateur)){
+                    $resultat = $utilisateurdao->read(["option"=>"email", "valeur"=>$email]);
+        
+                    if($resultat){
+                        $role = new Role(
+                            $resultat['role_id'],
+                            $resultat['role_nom']
+                        );
+        
+                        $specialisation = new specialisation(
+                            $resultat['specialisation_id'],
+                            $resultat['specialisation_nom']
+                        );
+        
+                        $authentification = new Authentification(
+                            null,
+                            $resultat['authentification_mot_de_passe'],
+                            $resultat['authentification_cle_secrete']
+                        );
+
+                        $utilisateur = new Utilisateur(
+                            $resultat['utilisateur_id'],
+                            $resultat['utilisateur_actif'],
+                            $role,
+                            $specialisation,
+                            $authentification,
+                            $resultat['utilisateur_nom'],
+                            $resultat['utilisateur_prenom'],
+                            $resultat['utilisateur_email'],
+                            $resultat['utilisateur_telephone'],
+                            $resultat['utilisateur_numero_de_rue'],
+                            $resultat['utilisateur_rue'],
+                            $resultat['utilisateur_ville'],
+                            $resultat['utilisateur_code_postal'],
+                            $resultat['utilisateur_date']
+                        );
+        
+                        $authentification->setUtilisateur($utilisateur);
+
                         if(password_verify($mot_de_passe, $utilisateur->getAuthentification()->getMotdepasse())){
-                        $_SESSION["utilisateur"] = $utilisateur;
-                        $_SESSION["validite"]=False;
-                        header("Location: code.php");
+                            $_SESSION["utilisateur"] = $utilisateur;
+                            $_SESSION["validite"]=False;
+                            header("Location: code.php");
                         }else{
                             $moteur->assigner("message", "<b>Mauvaises informations de connexion.</b>");
                         }
@@ -87,8 +121,7 @@ class ControlleurDefaut {
 
             $contenu = 
             "
-                <p><b>Entreprise : </b>".$utilisateur->getEntreprise()->getNom()."</p>
-                <p><b>Rôle : </b>".$utilisateur->getRole()->getTitre()."</p>
+                <p><b>Rôle : </b>".$utilisateur->getRole()->getNom()."</p>
             ";
 
             $moteur->assigner("titre", "Bienvenue ".$utilisateur->getPrenom()." ".$utilisateur->getPrenom());
@@ -114,21 +147,22 @@ class ControlleurDefaut {
         $specialisationdao = new SpecialisationDAO;
         $utilisateurdao = new UtilisateurDAO;
 
-        $lesroles = $roledao->find(["option"=>"", "valeur"=>""]); 
-        $lesspecialisations = $specialisationdao->find(["option"=>"", "valeur"=>""]); 
+        $lesroles = $roledao->read(["option"=>"", "valeur"=>""]); 
+        $lesspecialisations = $specialisationdao->read(["option"=>"", "valeur"=>""]); 
 
         $roles = "";
         $specialisations = "";
 
-		foreach ($lesroles as $role) {
-			$roles .= '<option value="'.$role->getId().'">'.$role->getNom().'</option>';
+		for ($i; $role=$lesroles; $i++) {
+			$roles .= '<option value="'.$role["role_id"].'">'.$role["role_nom"].'</option>';
 		}
         
         foreach ($lesspecialisations as $specialisation) {
-			$specialisations .= '<option value="'.$specialisation->getId().'">'.$specialisation->getNom().'</option>';
+            $specialisations .= '<option value="'.$specialisation["specialisation_id"].'">'.$specialisation["specialisation_nom"].'</option>';
 		}
 
         $moteur->assigner("code qr", "");
+        $moteur->assigner("message", "");
         $moteur->assigner("roles", $roles);
         $moteur->assigner("specialisations", $specialisations);
 
@@ -174,10 +208,10 @@ class ControlleurDefaut {
 
                             $authentification = new Authentification(null, null, $cle_secrete);
                             $authentification->setMotdepasse($mot_de_passe);
-                            $role = $roledao->find(["option"=>"id", "valeur"=>$role])[0];
+                            $role = $roledao->read(["option"=>"id", "valeur"=>$role])[0];
 
                             if(!empty($specialisation)){
-                                $specialisation = $specialisationdao->find(["option"=>"id", "valeur"=>$specialisation])[0];
+                                $specialisation = $specialisationdao->read(["option"=>"id", "valeur"=>$specialisation])[0];
                             }else{
                                 $specialisation = new Specialisation(null, null);
                             }
@@ -199,10 +233,16 @@ class ControlleurDefaut {
                                 null
                             );
 
-                            $utilisateurdao->persist($utilisateur);
+                            $utilisateurdao->create($utilisateur);
                         }
+                    }else{
+                        $moteur->assigner("message", "<b>Le numéro de téléphone n'a pas la bonne longeur (10).</b>");
                     }
+                }else{
+                    $moteur->assigner("message", "<b>Le format de l'email est invalide.</b>");
                 }
+            }else{
+                $moteur->assigner("message", "<b>L'un des champs est vide.</b>");
             }
         }
         $moteur->affichage("inscription.html");

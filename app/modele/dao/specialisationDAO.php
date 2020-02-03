@@ -1,15 +1,14 @@
 <?php
 require_once("app/imports.php");
 
-class SpecialisationDAO {
-    public function delete($option){
+class SpecialisationDAO implements CRUD {
+    public function create($specialisation){
 
     }
 
-    public function find($option){
+    public function read($option){
         $connect = new Connect;
 		$bdd = $connect->connexion();
-		$resultat;
 
 		$sql = "SELECT * FROM specialisation";
 
@@ -28,23 +27,51 @@ class SpecialisationDAO {
 				break;
 		}
 
-		$specialisations = array();
+		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        $connect = null;
+		return $requete->fetch();
+    }
 
-		for($i=0; $specialisation=$requete->fetch(); $i++){
-			$specialisations[$i] = new Specialisation($specialisation['specialisation_id'], $specialisation['specialisation_nom']);
+    public function update($specialisation){
+		$connect = new Connect;
+		$bdd = $connect->connexion();
+
+		$requete = $bdd->prepare("UPDATE specialisation SET specialisation_nom=:nom WHERE specialisation_id=:id");
+		$resultat = $requete->execute([
+			"id" => $specialisation->getId(),
+			"nom"=> $specialisation->getNom()
+		]);
+
+		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        $connect = null;
+		return $resultat;
+	}
+	
+	public function delete($option){
+		$connect = new Connect;
+		$bdd = $connect->connexion();
+		$resultat;
+
+		$sql = "DELETE FROM specialisation";
+
+		switch ($option["option"]) {
+			case 'id':
+				$requete = $bdd->prepare($sql." WHERE specialisation_id=:valeur");
+				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			case 'nom':
+				$requete = $bdd->prepare($sql." WHERE specialisation_nom=:valeur");
+				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			default:
+				$requete = $bdd->prepare($sql);
+				$resultat = $requete->execute();
+				break;
 		}
 
 		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
         $connect = null;
-		return $specialisations;
-    }
-
-    public function persist($specialisation){
-
-    }
-
-    public function update($specialisation){
-
-    }
+		return $resultat;
+	}
 }
 ?>

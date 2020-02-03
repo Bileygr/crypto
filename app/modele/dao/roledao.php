@@ -1,15 +1,22 @@
 <?php
 require_once("app/imports.php");
 
-class RoleDAO implements DAO {
-	public function delete($option){
+class RoleDAO implements CRUD {
+	public function create($role){
+		$connect = new Connect;
+		$bdd = $connect->connexion();
 
+		$requete = $bdd->prepare("INSERT INTO role(role_nom) VALUES(:nom)");
+		$requete->execute(["nom" => $option["nom"]]);
+
+		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        $connect = null;
+		return $requete->fetch();
 	}
 
-    public function find($option){
+    public function read($option){
         $connect = new Connect;
 		$bdd = $connect->connexion();
-		$resultat;
 
 		$sql = "SELECT * FROM role";
 
@@ -28,23 +35,47 @@ class RoleDAO implements DAO {
 				break;
 		}
 
-		$roles = array();
+		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        $connect = null;
+		return $requete->fetch();
+	}
 
-		for($i=0; $role=$requete->fetch(); $i++){
-			$roles[$i] = new Role($role['role_id'], $role['role_nom']);
+	public function update($role){
+		$connect = new Connect;
+		$bdd = $connect->connexion();
+
+		$requete = $bdd->prepare("UPDATE role SET role_nom=:nom WHERE role_id=:id");
+		$requete->execute(["id" => $role->getId(), "nom"=>$role->getNom()]);
+
+		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        $connect = null;
+		return $requete->fetch();
+	}
+
+	public function delete($option){
+		$connect = new Connect;
+		$bdd = $connect->connexion();
+
+		$sql = "DELETE FROM utilisateur WHERE role_id=:id";
+
+		switch ($option["option"]) {
+			case "id":
+				$requete = $bdd->prepare($sql." WHERE role_id=:id");
+				$requete->execute(["id" => $role->getId()]);
+				break;
+			case "nom":
+				$requete = $bdd->prepare($sql." WHERE role_nom=:nom");
+				$requete->execute(["nom" => $role->getNom()]);
+				break;
+			default:
+				$requete = $bdd->prepare($sql);
+				$requete->execute();
+				break;
 		}
 
 		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
         $connect = null;
-		return $roles;
-	}
-	
-	public function persist($role){
-
-	}
-
-	public function update($role){
-
+		return $requete->fetch();
 	}
 }
 ?>

@@ -45,7 +45,6 @@
             <div id="div_specialisation" style="display: none;">
                 <label for="specialisation" >Spécialisation</label>
                 <select id="specialisation" name="specialisation">
-                    <option value=""></option>
                     {{ specialisations }}
                 </select><br>
             </div>
@@ -53,6 +52,8 @@
             <input type="submit" name="inscrire" value="Inscription"><br>
 
             {{ code qr }}
+
+            {{ message }}
         </form>
 
         <script>

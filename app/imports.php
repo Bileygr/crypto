@@ -23,7 +23,7 @@ require_once("modele/metier/traitement.php");
 require_once("modele/metier/utilisateur.php");
 
 // Classes DAO (requêtes SQL)
-require_once("modele/dao/dao.php");
+require_once("modele/dao/CRUD.php");
 require_once("modele/dao/authentificationdao.php");
 require_once("modele/dao/specialisationDAO.php");
 require_once("modele/dao/roleDAO.php");
