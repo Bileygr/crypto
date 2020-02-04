@@ -2,10 +2,12 @@
 require_once("app/imports.php");
 
 class UtilisateurDAO implements CRUD {
+    private $type_de_connexion = "pgsql";
+
     public function create($utilisateur){
         $connect = new Connect;
         $authentificationdao = new AuthentificationDAO;
-        $bdd = $connect->connexion();
+        $bdd = $connect->connexion($this->type_de_connexion);
 
         $requete = $bdd->prepare("INSERT INTO utilisateur(utilisateur_actif, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone,
                                                             utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) 
@@ -31,14 +33,14 @@ class UtilisateurDAO implements CRUD {
         $authentification->setUtilisateur($utilisateur);
         $authentificationdao->create($authentification);
 
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
         return $resultat;
     }
 
     public function read($option){
         $connect = new Connect;
-        $bdd = $connect->connexion();
+        $bdd = $connect->connexion($this->type_de_connexion);
 
         $sql = 
         "
@@ -100,14 +102,14 @@ class UtilisateurDAO implements CRUD {
 				break;
         }
 
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
 		return $requete->fetch();
     }
 
     public function update($utilisateur){
         $connect = new Connect;
-        $bdd = $connect->connexion();
+        $bdd = $connect->connexion($this->type_de_connexion);
 
         if($utilisateur->getRole()->getId() != 3){
             $utilisateur->getSpecialisation()->setId(1);
@@ -131,14 +133,14 @@ class UtilisateurDAO implements CRUD {
             "code_postal"=>$utilisateur->getCodepostal()
         ]);
 
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
 		return $requete->fetch();
     }
 
     public function delete($option){
         $connect = new Connect;
-        $bdd = $connect->connexion();
+        $bdd = $connect->connexion($this->type_de_connexion);
 
         $sql = "DELETE FROM utilisateur";
 
@@ -201,8 +203,8 @@ class UtilisateurDAO implements CRUD {
                 break;
         }
 
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
 		return $requete->fetch();
     }
 }

@@ -2,9 +2,11 @@
 require_once("app/imports.php");
 
 class AuthentificationDAO implements CRUD{
+    private $type_de_connexion = "pgsql";
+
     public function create($authentification){
         $connect = new Connect;
-        $bdd = $connect->connexion();
+        $bdd = $connect->connexion($this->type_de_connexion);
         
         $requete = $bdd->prepare("INSERT INTO authentification(utilisateur_id, authentification_mot_de_passe, authentification_cle_secrete) VALUES(?, ?, ?)");
 		$resultat = $requete->execute([
@@ -13,13 +15,13 @@ class AuthentificationDAO implements CRUD{
             $authentification->getClesecrete()
         ]);
 
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
     }
 
     public function read($option){
         $connect = new Connect;
-		$bdd = $connect->connexion();
+		$bdd = $connect->connexion($this->type_de_connexion);
 
         $sql = "SELECT * FROM authentification";
 
@@ -52,14 +54,14 @@ class AuthentificationDAO implements CRUD{
             );
         }
 
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
 		return $authentifications;
     }
 
     public function update($authentification){
         $connect = new Connect;
-        $bdd = $connect->connexion();
+        $bdd = $connect->connexion($this->type_de_connexion);
         
         $requete = $bdd->prepare("UPDATE authentification SET utilisateur_id=?, authentification_mot_de_passe=?, authentification_cle_secrete=?");
 		$resultat = $requete->execute([
@@ -68,14 +70,14 @@ class AuthentificationDAO implements CRUD{
             $authentification->getClesecrete()
         ]);
 
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
         return $resultat;
     }
 
     public function delete($option){
         $connect = new Connect;
-		$bdd = $connect->connexion();
+		$bdd = $connect->connexion($this->type_de_connexion);
 		$resultat;
 
         $sql = "DELETE FROM authentification";
@@ -99,8 +101,8 @@ class AuthentificationDAO implements CRUD{
 				break;
         }
         
-        $connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
         return $resultat;
     }
 }

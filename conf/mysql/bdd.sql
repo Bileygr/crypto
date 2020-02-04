@@ -5,7 +5,10 @@
   * 2019-2020
 */
 
---CREATE DATABASE asclepius;
+DROP DATABASE IF EXISTS asclepius;
+CREATE DATABASE asclepius CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+USE asclepius;
 
 DROP TABLE IF EXISTS authentification CASCADE;
 CREATE TABLE IF NOT EXISTS authentification (

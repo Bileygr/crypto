@@ -2,13 +2,15 @@
 require_once("app/imports.php");
 
 class SpecialisationDAO implements CRUD {
+	private $type_de_connexion = "pgsql";
+
     public function create($specialisation){
 
     }
 
     public function read($option){
         $connect = new Connect;
-		$bdd = $connect->connexion();
+		$bdd = $connect->connexion($this->type_de_connexion);
 
 		$sql = "SELECT * FROM specialisation";
 
@@ -27,14 +29,14 @@ class SpecialisationDAO implements CRUD {
 				break;
 		}
 
-		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
 		return $requete->fetchAll();
     }
 
     public function update($specialisation){
 		$connect = new Connect;
-		$bdd = $connect->connexion();
+		$bdd = $connect->connexion($this->type_de_connexion);
 
 		$requete = $bdd->prepare("UPDATE specialisation SET specialisation_nom=:nom WHERE specialisation_id=:id");
 		$resultat = $requete->execute([
@@ -42,14 +44,14 @@ class SpecialisationDAO implements CRUD {
 			"nom"=> $specialisation->getNom()
 		]);
 
-		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
 		return $resultat;
 	}
 	
 	public function delete($option){
 		$connect = new Connect;
-		$bdd = $connect->connexion();
+		$bdd = $connect->connexion($this->type_de_connexion);
 		$resultat;
 
 		$sql = "DELETE FROM specialisation";
@@ -69,8 +71,8 @@ class SpecialisationDAO implements CRUD {
 				break;
 		}
 
-		$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        $connect = null;
+		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
+        //$connect = null;
 		return $resultat;
 	}
 }

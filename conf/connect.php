@@ -1,15 +1,15 @@
 <?php
 class Connect{
-	public function connexion(){
+	public function connexion($type){
 		$settings = parse_ini_file("settings.ini", true);
-		$host = $settings["database"]["host"];
-		$port = $settings["database"]["port"];
-		$db = $settings["database"]["db"];
-		$user = $settings["database"]["user"];
-		$password = $settings["database"]["password"];
+		$host = $settings[$type]["host"];
+		$port = $settings[$type]["port"];
+		$db = $settings[$type]["db"];
+		$user = $settings[$type]["user"];
+		$password = $settings[$type]["password"];
 
 		try{
-			$db = new PDO("pgsql:host=".$host.";port=".$port.";dbname=".$db.";", $user, $password);
+			$db = new PDO($type.":host=".$host.";port=".$port.";dbname=".$db.";", $user, $password);
 		}catch(Exception $e){
 			echo "Échec lors de la connexion: ".$e->getMessage();
 		}

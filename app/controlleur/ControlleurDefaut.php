@@ -132,10 +132,10 @@ class ControlleurDefaut {
                 ";
             }
 
-            $moteur->assigner("titre", "Bienvenue ".$utilisateur->getPrenom()." ".$utilisateur->getPrenom());
+            $moteur->assigner("titre", "Bienvenue ".$utilisateur->getPrenom()." ".$utilisateur->getNom());
             $moteur->assigner("connexion", "");
             $moteur->assigner("inscription", "");
-            $moteur->assigner("deconnexion", "<a href=\"modifier-vos-informations.php\">Modifier vos informations</a> <a href=\"deconnexion.php\">Déconnexion</a>");
+            $moteur->assigner("deconnexion", "<a href=\"deconnexion.php\">Déconnexion</a>");
             $moteur->assigner("contenu", $contenu);
         }else{
             $moteur->assigner("titre", "Accueil");
