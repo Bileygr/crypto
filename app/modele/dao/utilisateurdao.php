@@ -2,12 +2,11 @@
 require_once("app/imports.php");
 
 class UtilisateurDAO implements CRUD {
-    private $type_de_connexion = "pgsql";
-
     public function create($utilisateur){
         $connect = new Connect;
         $authentificationdao = new AuthentificationDAO;
-        $bdd = $connect->connexion($this->type_de_connexion);
+        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion($type_de_connexion);
 
         $requete = $bdd->prepare("INSERT INTO utilisateur(utilisateur_actif, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone,
                                                             utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) 
@@ -40,7 +39,8 @@ class UtilisateurDAO implements CRUD {
 
     public function read($option){
         $connect = new Connect;
-        $bdd = $connect->connexion($this->type_de_connexion);
+        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion($type_de_connexion);
 
         $sql = 
         "
@@ -109,7 +109,8 @@ class UtilisateurDAO implements CRUD {
 
     public function update($utilisateur){
         $connect = new Connect;
-        $bdd = $connect->connexion($this->type_de_connexion);
+        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion($type_de_connexion);
 
         if($utilisateur->getRole()->getId() != 3){
             $utilisateur->getSpecialisation()->setId(1);
@@ -140,7 +141,8 @@ class UtilisateurDAO implements CRUD {
 
     public function delete($option){
         $connect = new Connect;
-        $bdd = $connect->connexion($this->type_de_connexion);
+        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion($type_de_connexion);
 
         $sql = "DELETE FROM utilisateur";
 

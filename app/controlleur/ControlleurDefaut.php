@@ -69,7 +69,7 @@ class ControlleurDefaut {
                             $moteur->assigner("message", "<b>Mauvaises informations de connexion.</b>");
                         }
                     }else{
-                        $moteur->assigner("message", "<b>Mauvaises informations de connexion (a).</b>");
+                        $moteur->assigner("message", "<b>L'utilisateur n'existe pas.</b>");
                     }
                 }else{
                     $moteur->assigner("message", "<b>Vérifiez le format de votre adresse email.</b>");
