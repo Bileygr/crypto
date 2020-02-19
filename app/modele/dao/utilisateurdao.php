@@ -32,111 +32,7 @@ class UtilisateurDAO implements CRUD {
         $authentification->setUtilisateur($utilisateur);
         $authentificationdao->create($authentification);
 
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
         return $resultat;
-    }
-
-    public function read($option){
-        $connect = new Connect;
-        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-        $bdd = $connect->connexion($type_de_connexion);
-
-        $sql = 
-        "
-            SELECT utilisateur.utilisateur_id, utilisateur.utilisateur_actif, utilisateur.utilisateur_nom, utilisateur.utilisateur_prenom,
-		            utilisateur.utilisateur_email, utilisateur.utilisateur_telephone, utilisateur.utilisateur_numero_de_rue, utilisateur.utilisateur_rue,
-		            utilisateur.utilisateur_ville, utilisateur.utilisateur_code_postal, utilisateur.utilisateur_date, role.role_id, role.role_nom,
-		            specialisation.specialisation_id, specialisation.specialisation_nom, authentification.authentification_mot_de_passe, 
-		            authentification.authentification_cle_secrete
-            FROM utilisateur
-            JOIN role ON utilisateur.role_id=role.role_id
-            JOIN specialisation ON utilisateur.specialisation_id = specialisation.specialisation_id
-            JOIN authentification ON utilisateur.utilisateur_id = authentification.utilisateur_id
-        ";
-
-		switch ($option["option"]) {
-			case 'id':
-				$requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_id=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			case 'nom':
-				$requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_nom=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'prenom':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_prenom=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'email':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_email=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'telephone':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_telephone=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'numéro de rue':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_numero_de_rue=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'rue':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_rue=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'ville':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_ville=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'code postal':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_code_postal=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'date':
-                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_date=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-			default:
-				$requete = $bdd->prepare($sql);
-				$requete->execute();
-				break;
-        }
-
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
-		return $requete->fetch();
-    }
-
-    public function update($utilisateur){
-        $connect = new Connect;
-        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-        $bdd = $connect->connexion($type_de_connexion);
-
-        if($utilisateur->getRole()->getId() != 3){
-            $utilisateur->getSpecialisation()->setId(1);
-        }
-
-        $requete = $bdd->prepare("UPDATE utilisateur SET utilisateur_actif=:actif, role_id=:role, 
-                                        specialisation_id=:specialisation, utilisateur_nom=:nom, utilisateur_prenom=:prenom,
-                                        utilisateur_email=:email, utilisateur_telephone=:telephone, utilisateur_numero_de_rue=:numero_de_rue,
-                                        utilisateur_rue=:rue, utilisateur_ville=:ville, utilisateur_code_postal=:code_postal WHERE utilisateur_id=:id");
-		$requete->execute([
-            "id"=>$utilisateur->getRole()->getId(),
-            "specialisation"=>$utilisateur->getSpecialisation()->getId(),
-            "actif"=>$utilisateur->getActif(),
-            "nom"=>$utilisateur->getNom(),
-            "prenom"=>$utilisateur->getPrenom(),
-            "email"=>$utilisateur->getEmail(),
-            "telephone"=>$utilisateur->getTelephone(),
-            "numero_de_rue"=>$utilisateur->getNumeroderue(),
-            "rue"=>$utilisateur->getRue(),
-            "ville"=>$utilisateur->getVille(),
-            "code_postal"=>$utilisateur->getCodepostal()
-        ]);
-
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
-		return $requete->fetch();
     }
 
     public function delete($option){
@@ -205,8 +101,104 @@ class UtilisateurDAO implements CRUD {
                 break;
         }
 
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
+		return $requete->fetch();
+    }
+
+    public function read($option){
+        $connect = new Connect;
+        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion($type_de_connexion);
+
+        $sql = 
+        "
+            SELECT utilisateur.utilisateur_id, utilisateur.utilisateur_actif, utilisateur.utilisateur_nom, utilisateur.utilisateur_prenom,
+		            utilisateur.utilisateur_email, utilisateur.utilisateur_telephone, utilisateur.utilisateur_numero_de_rue, utilisateur.utilisateur_rue,
+		            utilisateur.utilisateur_ville, utilisateur.utilisateur_code_postal, utilisateur.utilisateur_date, role.role_id, role.role_nom,
+		            specialisation.specialisation_id, specialisation.specialisation_nom, authentification.authentification_mot_de_passe, 
+		            authentification.authentification_cle_secrete
+            FROM utilisateur
+            JOIN role ON utilisateur.role_id=role.role_id
+            JOIN specialisation ON utilisateur.specialisation_id = specialisation.specialisation_id
+            JOIN authentification ON utilisateur.utilisateur_id = authentification.utilisateur_id
+        ";
+
+		switch ($option["option"]) {
+			case 'id':
+				$requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_id=:valeur");
+				$requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			case 'nom':
+				$requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_nom=:valeur");
+				$requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'prenom':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_prenom=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'email':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_email=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'telephone':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_telephone=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'numéro de rue':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_numero_de_rue=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'rue':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_rue=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'ville':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_ville=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'code postal':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_code_postal=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'date':
+                $requete = $bdd->prepare($sql." WHERE utilisateur.utilisateur_date=:valeur");
+                $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+			default:
+				$requete = $bdd->prepare($sql);
+				$requete->execute();
+				break;
+        }
+
+		return $requete->fetch();
+    }
+
+    public function update($utilisateur){
+        $connect = new Connect;
+        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion($type_de_connexion);
+
+        if($utilisateur->getRole()->getId() != 3){
+            $utilisateur->getSpecialisation()->setId(1);
+        }
+
+        $requete = $bdd->prepare("UPDATE utilisateur SET utilisateur_actif=:actif, role_id=:role, 
+                                        specialisation_id=:specialisation, utilisateur_nom=:nom, utilisateur_prenom=:prenom,
+                                        utilisateur_email=:email, utilisateur_telephone=:telephone, utilisateur_numero_de_rue=:numero_de_rue,
+                                        utilisateur_rue=:rue, utilisateur_ville=:ville, utilisateur_code_postal=:code_postal WHERE utilisateur_id=:id");
+		$requete->execute([
+            "id"=>$utilisateur->getRole()->getId(),
+            "specialisation"=>$utilisateur->getSpecialisation()->getId(),
+            "actif"=>$utilisateur->getActif(),
+            "nom"=>$utilisateur->getNom(),
+            "prenom"=>$utilisateur->getPrenom(),
+            "email"=>$utilisateur->getEmail(),
+            "telephone"=>$utilisateur->getTelephone(),
+            "numero_de_rue"=>$utilisateur->getNumeroderue(),
+            "rue"=>$utilisateur->getRue(),
+            "ville"=>$utilisateur->getVille(),
+            "code_postal"=>$utilisateur->getCodepostal()
+        ]);
+
 		return $requete->fetch();
     }
 }

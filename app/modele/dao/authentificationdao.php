@@ -14,8 +14,37 @@ class AuthentificationDAO implements CRUD{
             $authentification->getClesecrete()
         ]);
 
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
+        return $resultat;
+    }
+
+    public function delete($option){
+        $connect = new Connect;
+        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion($type_de_connexion);
+		$resultat;
+
+        $sql = "DELETE FROM authentification";
+
+		switch ($option["option"]) {
+			case 'id utilisateur':
+				$requete = $bdd->prepare($sql." WHERE utilisateur_id=:valeur");
+				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			case 'mot de passe':
+				$requete = $bdd->prepare($sql." WHERE authentification_mot_de_passe=:valeur");
+				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+            case 'clé secrète':
+                $requete = $bdd->prepare($sql." WHERE prenom=:valeur");
+                $resultat = $requete->execute(["valeur" => $option["valeur"]]);
+                break;
+			default:
+				$requete = $bdd->prepare($sql);
+				$resultat = $requete->execute();
+				break;
+        }
+        
+        return $resultat;
     }
 
     public function read($option){
@@ -54,8 +83,6 @@ class AuthentificationDAO implements CRUD{
             );
         }
 
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
 		return $authentifications;
     }
 
@@ -71,40 +98,6 @@ class AuthentificationDAO implements CRUD{
             $authentification->getClesecrete()
         ]);
 
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
-        return $resultat;
-    }
-
-    public function delete($option){
-        $connect = new Connect;
-        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
-		$resultat;
-
-        $sql = "DELETE FROM authentification";
-
-		switch ($option["option"]) {
-			case 'id utilisateur':
-				$requete = $bdd->prepare($sql." WHERE utilisateur_id=:valeur");
-				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			case 'mot de passe':
-				$requete = $bdd->prepare($sql." WHERE authentification_mot_de_passe=:valeur");
-				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'clé secrète':
-                $requete = $bdd->prepare($sql." WHERE prenom=:valeur");
-                $resultat = $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-			default:
-				$requete = $bdd->prepare($sql);
-				$resultat = $requete->execute();
-				break;
-        }
-        
-        //$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
         return $resultat;
     }
 }

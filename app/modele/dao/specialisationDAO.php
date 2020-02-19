@@ -3,49 +3,13 @@ require_once("app/imports.php");
 
 class SpecialisationDAO implements CRUD {
 	public function create($specialisation){
-
-    }
-
-    public function read($option){
 		$connect = new Connect;
 		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
 		$bdd = $connect->connexion($type_de_connexion);
 
-		$sql = "SELECT * FROM specialisation";
+		$requete = $bdd->prepare("INSERT INTO specialisation(specialisation_nom) VALUES(:nom)");
+		$resultat = $requete->execute(["nom"=>$specialisation->getNom()]);
 
-		switch ($option["option"]) {
-			case 'id':
-				$requete = $bdd->prepare($sql." WHERE specialisation_id=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			case 'nom':
-				$requete = $bdd->prepare($sql." WHERE specialisation_nom=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			default:
-				$requete = $bdd->prepare($sql);
-				$requete->execute();
-				break;
-		}
-
-		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
-		return $requete->fetchAll();
-    }
-
-    public function update($specialisation){
-		$connect = new Connect;
-		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
-
-		$requete = $bdd->prepare("UPDATE specialisation SET specialisation_nom=:nom WHERE specialisation_id=:id");
-		$resultat = $requete->execute([
-			"id" => $specialisation->getId(),
-			"nom"=> $specialisation->getNom()
-		]);
-
-		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
 		return $resultat;
 	}
 	
@@ -72,8 +36,45 @@ class SpecialisationDAO implements CRUD {
 				break;
 		}
 
-		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
+		return $resultat;
+	}
+
+    public function read($option){
+		$connect = new Connect;
+		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion($type_de_connexion);
+
+		$sql = "SELECT * FROM specialisation";
+
+		switch ($option["option"]) {
+			case 'id':
+				$requete = $bdd->prepare($sql." WHERE specialisation_id=:valeur");
+				$requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			case 'nom':
+				$requete = $bdd->prepare($sql." WHERE specialisation_nom=:valeur");
+				$requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			default:
+				$requete = $bdd->prepare($sql);
+				$requete->execute();
+				break;
+		}
+
+		return $requete->fetchAll();
+    }
+
+    public function update($specialisation){
+		$connect = new Connect;
+		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion($type_de_connexion);
+
+		$requete = $bdd->prepare("UPDATE specialisation SET specialisation_nom=:nom WHERE specialisation_id=:id");
+		$resultat = $requete->execute([
+			"id" => $specialisation->getId(),
+			"nom"=> $specialisation->getNom()
+		]);
+
 		return $resultat;
 	}
 }

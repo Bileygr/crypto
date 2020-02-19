@@ -10,48 +10,6 @@ class RoleDAO implements CRUD {
 		$requete = $bdd->prepare("INSERT INTO role(role_nom) VALUES(:nom)");
 		$requete->execute(["nom" => $option["nom"]]);
 
-		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
-		return $requete->fetch();
-	}
-
-    public function read($option){
-		$connect = new Connect;
-		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
-
-		$sql = "SELECT * FROM role";
-
-		switch ($option["option"]) {
-			case 'id':
-				$requete = $bdd->prepare($sql." WHERE role_id=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			case 'titre':
-				$requete = $bdd->prepare($sql." WHERE role_nom=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			default:
-				$requete = $bdd->prepare($sql);
-				$requete->execute();
-				break;
-		}
-
-		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
-		return $requete->fetchAll();
-	}
-
-	public function update($role){
-		$connect = new Connect;
-		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
-
-		$requete = $bdd->prepare("UPDATE role SET role_nom=:nom WHERE role_id=:id");
-		$requete->execute(["id" => $role->getId(), "nom"=>$role->getNom()]);
-
-		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
 		return $requete->fetch();
 	}
 
@@ -77,8 +35,42 @@ class RoleDAO implements CRUD {
 				break;
 		}
 
-		//$connect->connexion()->prepare("SELECT pg_terminate_backend(pg_backend_pid())")->execute();
-        //$connect = null;
+		return $requete->fetch();
+	}
+
+    public function read($option){
+		$connect = new Connect;
+		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion($type_de_connexion);
+
+		$sql = "SELECT * FROM role";
+
+		switch ($option["option"]) {
+			case 'id':
+				$requete = $bdd->prepare($sql." WHERE role_id=:valeur");
+				$requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			case 'titre':
+				$requete = $bdd->prepare($sql." WHERE role_nom=:valeur");
+				$requete->execute(["valeur" => $option["valeur"]]);
+				break;
+			default:
+				$requete = $bdd->prepare($sql);
+				$requete->execute();
+				break;
+		}
+
+		return $requete->fetchAll();
+	}
+
+	public function update($role){
+		$connect = new Connect;
+		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion($type_de_connexion);
+
+		$requete = $bdd->prepare("UPDATE role SET role_nom=:nom WHERE role_id=:id");
+		$requete->execute(["id" => $role->getId(), "nom"=>$role->getNom()]);
+
 		return $requete->fetch();
 	}
 }
