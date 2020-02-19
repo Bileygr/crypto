@@ -4,8 +4,8 @@ require_once("app/imports.php");
 class RoleDAO implements CRUD {
 	public function create($role){
 		$connect = new Connect;
-		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
+		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion();
 
 		$requete = $bdd->prepare("INSERT INTO role(role_nom) VALUES(:nom)");
 		$requete->execute(["nom" => $option["nom"]]);
@@ -15,8 +15,8 @@ class RoleDAO implements CRUD {
 
 	public function delete($option){
 		$connect = new Connect;
-		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
+		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion();
 
 		$sql = "DELETE FROM utilisateur WHERE role_id=:id";
 
@@ -40,8 +40,8 @@ class RoleDAO implements CRUD {
 
     public function read($option){
 		$connect = new Connect;
-		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
+		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion();
 
 		$sql = "SELECT * FROM role";
 
@@ -65,8 +65,8 @@ class RoleDAO implements CRUD {
 
 	public function update($role){
 		$connect = new Connect;
-		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
+		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion();
 
 		$requete = $bdd->prepare("UPDATE role SET role_nom=:nom WHERE role_id=:id");
 		$requete->execute(["id" => $role->getId(), "nom"=>$role->getNom()]);

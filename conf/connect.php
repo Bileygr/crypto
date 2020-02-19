@@ -1,6 +1,6 @@
 <?php
 class Connect{
-	public function connexion($type){
+	public function connexion(){
 		/*
 		$settings = parse_ini_file("settings.ini", true);
 		$host = $settings[$type]["host"];

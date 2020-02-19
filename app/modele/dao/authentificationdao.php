@@ -4,8 +4,8 @@ require_once("app/imports.php");
 class AuthentificationDAO implements CRUD{
     public function create($authentification){
         $connect = new Connect;
-        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-        $bdd = $connect->connexion($type_de_connexion);
+        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion();
         
         $requete = $bdd->prepare("INSERT INTO authentification(utilisateur_id, authentification_mot_de_passe, authentification_cle_secrete) VALUES(?, ?, ?)");
 		$resultat = $requete->execute([
@@ -19,8 +19,8 @@ class AuthentificationDAO implements CRUD{
 
     public function delete($option){
         $connect = new Connect;
-        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
+        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion();
 		$resultat;
 
         $sql = "DELETE FROM authentification";
@@ -49,8 +49,8 @@ class AuthentificationDAO implements CRUD{
 
     public function read($option){
         $connect = new Connect;
-        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion($type_de_connexion);
+        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion();
 
         $sql = "SELECT * FROM authentification";
 
@@ -88,8 +88,8 @@ class AuthentificationDAO implements CRUD{
 
     public function update($authentification){
         $connect = new Connect;
-        $type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-        $bdd = $connect->connexion($type_de_connexion);
+        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+        $bdd = $connect->connexion();
         
         $requete = $bdd->prepare("UPDATE authentification SET utilisateur_id=?, authentification_mot_de_passe=?, authentification_cle_secrete=?");
 		$resultat = $requete->execute([
