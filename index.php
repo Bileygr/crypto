@@ -2,12 +2,18 @@
 require_once("imports.php");
 session_start();
 
+$bar_links = "";
 $contenu = "";
 
 if(isset($_SESSION["utilisateur"])){
     $utilisateur = $_SESSION["utilisateur"];
 
-    $bar_links = "";
+    $bar_links = 
+    '
+        <li class="nav-item">
+            <a class="nav-link" href="deconnexion.php">Déconnexion</a>
+        </li>
+    ';
 
     $contenu = 
     "
@@ -16,9 +22,20 @@ if(isset($_SESSION["utilisateur"])){
         <p class=\"lead\">Rôle : ".$utilisateur->getRole()->getNom()."</p>
     ";
 }else{
+
+    $bar_links = 
+    '
+        <li class="nav-item">
+            <a class="nav-link" href="connexion.php">Connexion</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="inscription.php">Inscription</a>
+        </li>  
+    ';
+
     $contenu = 
     "
-    <h1>Section Heading</h1>
+    <h1>Bienvenue sur le réseau de télémédecine!</h1>
     <p class=\"lead\">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
@@ -61,12 +78,9 @@ if(isset($_SESSION["utilisateur"])){
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="connexion.php">Connexion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="inscription.php">Inscription</a>
-                        </li>
+                        <?php 
+                            echo $bar_links;
+                        ?>
                     </ul>
                 </div>
             </div>
