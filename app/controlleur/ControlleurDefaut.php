@@ -149,17 +149,24 @@ class ControlleurDefaut {
     }
 
     public function inscription(){
+        $entreprisedao = new EntrepriseDAO;
         $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
         $moteur = new Moteur;
         $roledao = new RoleDAO;
         $specialisationdao = new SpecialisationDAO;
         $utilisateurdao = new UtilisateurDAO;
 
+        $lesentreprises = $entreprisedao->read(["option"=>"", "valeur"=>""]);
         $lesroles = $roledao->read(["option"=>"", "valeur"=>""]); 
         $lesspecialisations = $specialisationdao->read(["option"=>"", "valeur"=>""]); 
 
+        $entreprises = "";
         $roles = "";
         $specialisations = "";
+
+        foreach($lesentreprises as $entreprise){
+            $entreprises .='<option value="'.$entreprise["entreprise_siren"].'">'.$entreprise["entreprise_nom"].'</option>'; 
+        }
 
 		foreach($lesroles as $role) {
 			$roles .= '<option value="'.$role["role_id"].'">'.$role["role_nom"].'</option>';
@@ -171,6 +178,7 @@ class ControlleurDefaut {
 
         $moteur->assigner("code qr", "");
         $moteur->assigner("message", "");
+        $moteur->assigner("entreprises", $entreprises);
         $moteur->assigner("roles", $roles);
         $moteur->assigner("specialisations", $specialisations);
 
@@ -178,6 +186,7 @@ class ControlleurDefaut {
             $code_postal = $_POST["code_postal"];
             $confirmation_du_mot_de_passe = $_POST["confirmation_du_mot_de_passe"];
             $email = $_POST["email"];
+            $entreprise = $_POST["entreprise"];
             $mot_de_passe = $_POST["mot_de_passe"];
             $nom = $_POST["nom"];
             $numero_de_rue = $_POST["numero_de_rue"];
@@ -191,7 +200,7 @@ class ControlleurDefaut {
             if(!empty($code_postal) && !empty($confirmation_du_mot_de_passe) && 
                 !empty($email) && !empty($mot_de_passe) && !empty($nom) && 
                 !empty($numero_de_rue) && !empty($prenom) && !empty($role) && 
-                !empty($rue) && !empty($telephone) && !empty($ville)){
+                !empty($rue) && !empty($telephone) && !empty($ville) && !empty($entreprise)){
                 
                 if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                     
@@ -199,7 +208,7 @@ class ControlleurDefaut {
                         
                         if($mot_de_passe == $confirmation_du_mot_de_passe){
                             $cle_secrete = $googleAuthenticator->createSecret();
-                            $titre = 'Asclepius ('.$email.')';
+                            $titre = 'Telemedecine ('.$email.')';
                             $url_du_code_qr = $googleAuthenticator->getQRCodeGoogleUrl($titre, $cle_secrete);
                             
                             $code_qr = 
@@ -216,6 +225,19 @@ class ControlleurDefaut {
 
                             $authentification = new Authentification(null, null, $cle_secrete);
                             $authentification->setMotdepasse($mot_de_passe);
+                            $entreprise = $entreprisedao->read(["option"=>"siren", "valeur"=>$entreprise])[0];
+                            $entreprise = new Entreprise(
+                                $entreprise["entreprise_siren"], 
+                                $entreprise["entreprise_activation"], 
+                                $entreprise["entreprise_nom"],
+                                $entreprise["entreprise_telephone"],
+                                $entreprise["entreprise_email"],
+                                $entreprise["entreprise_numero_de_rue"],
+                                $entreprise["entreprise_rue"],
+                                $entreprise["entreprise_ville"],
+                                $entreprise["entreprise_code_postal"],
+                                $entreprise["entreprise_date"]
+                            );
                             $role = $roledao->read(["option"=>"id", "valeur"=>$role])[0];
                             $role = new Role($role["role_id"], $role["role_nom"]);
 
@@ -228,6 +250,7 @@ class ControlleurDefaut {
 
                             $utilisateur = new Utilisateur(
                                 null,
+                                $entreprise,
                                 False,
                                 $role,
                                 $specialisation,

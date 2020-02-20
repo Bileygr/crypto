@@ -1,18 +1,18 @@
 <?php
-require_once("app/imports.php");
+//require_once("app/imports.php");
 
 class UtilisateurDAO implements CRUD {
     public function create($utilisateur){
         $connect = new Connect;
         $authentificationdao = new AuthentificationDAO;
-        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
         $bdd = $connect->connexion();
 
-        $requete = $bdd->prepare("INSERT INTO utilisateur(utilisateur_actif, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone,
+        $requete = $bdd->prepare("INSERT INTO utilisateur(entreprise_siren, utilisateur_activation, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone,
                                                             utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) 
-                                    VALUES(:actif, :role, :specialisation, :nom, :prenom, :email, :telephone, :numero_de_rue, :rue, :ville, :code_postal)");
+                                    VALUES(:entreprise, :activation, :role, :specialisation, :nom, :prenom, :email, :telephone, :numero_de_rue, :rue, :ville, :code_postal)");
         $resultat = $requete->execute([
-            "actif"=>$utilisateur->getActif(),
+            "entreprise"=>$utilisateur->getEntreprise()->getSIREN(),
+            "activation"=>$utilisateur->getActivation(),
             "role"=>$utilisateur->getRole()->getId(),
             "specialisation"=>$utilisateur->getSpecialisation()->getId(),
             "nom"=>$utilisateur->getNom(),
@@ -37,7 +37,6 @@ class UtilisateurDAO implements CRUD {
 
     public function delete($option){
         $connect = new Connect;
-        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
         $bdd = $connect->connexion();
 
         $sql = "DELETE FROM utilisateur";
@@ -47,9 +46,9 @@ class UtilisateurDAO implements CRUD {
                 $requete = $bdd->prepare($sql." WHERE utilisateur_id=:id");
 		        $requete->execute(["id"=>$option["valeur"]]);
                 break;
-            case 'actif':
-                $requete = $bdd->prepare($sql." WHERE utilisateur_actif=:actif");
-                $requete->execute(["actif"=>$option["valeur"]]);
+            case 'activation':
+                $requete = $bdd->prepare($sql." WHERE utilisateur_activation=:activation");
+                $requete->execute(["activation"=>$option["valeur"]]);
                 break;
             case 'role':
                 $requete = $bdd->prepare($sql." WHERE role_id=:role");
@@ -106,20 +105,22 @@ class UtilisateurDAO implements CRUD {
 
     public function read($option){
         $connect = new Connect;
-        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
         $bdd = $connect->connexion();
 
         $sql = 
         "
-            SELECT utilisateur.utilisateur_id, utilisateur.utilisateur_actif, utilisateur.utilisateur_nom, utilisateur.utilisateur_prenom,
+            SELECT utilisateur.utilisateur_id, utilisateur.utilisateur_activation, utilisateur.utilisateur_nom, utilisateur.utilisateur_prenom,
 		            utilisateur.utilisateur_email, utilisateur.utilisateur_telephone, utilisateur.utilisateur_numero_de_rue, utilisateur.utilisateur_rue,
 		            utilisateur.utilisateur_ville, utilisateur.utilisateur_code_postal, utilisateur.utilisateur_date, role.role_id, role.role_nom,
 		            specialisation.specialisation_id, specialisation.specialisation_nom, authentification.authentification_mot_de_passe, 
-		            authentification.authentification_cle_secrete
+                    authentification.authentification_cle_secrete, entreprise.entreprise_siren, entreprise.entreprise_activation, entreprise.entreprise_nom,
+                    entreprise.entreprise_telephone, entreprise.entreprise_email, entreprise.entreprise_numero_de_rue, entreprise.entreprise_rue, entreprise.entreprise_ville,
+                    entreprise.entreprise_code_postal, entreprise.entreprise_date
             FROM utilisateur
             JOIN role ON utilisateur.role_id=role.role_id
             JOIN specialisation ON utilisateur.specialisation_id = specialisation.specialisation_id
             JOIN authentification ON utilisateur.utilisateur_id = authentification.utilisateur_id
+            JOIN entreprise ON utilisateur.entreprise_siren = entreprise.entreprise_siren
         ";
 
 		switch ($option["option"]) {
@@ -174,7 +175,6 @@ class UtilisateurDAO implements CRUD {
 
     public function update($utilisateur){
         $connect = new Connect;
-        //$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
         $bdd = $connect->connexion();
 
         if($utilisateur->getRole()->getId() != 3){

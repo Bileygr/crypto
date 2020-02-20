@@ -1,10 +1,9 @@
 <?php
-require_once("app/imports.php");
+//require_once("app/imports.php");
 
 class SpecialisationDAO implements CRUD {
 	public function create($specialisation){
 		$connect = new Connect;
-		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
 		$bdd = $connect->connexion();
 
 		$requete = $bdd->prepare("INSERT INTO specialisation(specialisation_nom) VALUES(:nom)");
@@ -15,8 +14,8 @@ class SpecialisationDAO implements CRUD {
 	
 	public function delete($option){
 		$connect = new Connect;
-		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
-		$bdd = $connect->connexion();
+		$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
+		$bdd = $connect->connexion($type_de_connexion);
 		$resultat;
 
 		$sql = "DELETE FROM specialisation";
@@ -41,7 +40,6 @@ class SpecialisationDAO implements CRUD {
 
     public function read($option){
 		$connect = new Connect;
-		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
 		$bdd = $connect->connexion();
 
 		$sql = "SELECT * FROM specialisation";
@@ -66,7 +64,6 @@ class SpecialisationDAO implements CRUD {
 
     public function update($specialisation){
 		$connect = new Connect;
-		//$type_de_connexion = parse_ini_file("conf/settings.ini", true)["type"]["nom"];
 		$bdd = $connect->connexion();
 
 		$requete = $bdd->prepare("UPDATE specialisation SET specialisation_nom=:nom WHERE specialisation_id=:id");

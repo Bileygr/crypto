@@ -1,6 +1,6 @@
 <?php
-require_once("app/imports.php");
-require_once("app/controlleur/ControlleurDefaut.php");
-$controlleur = new ControlleurDefaut;
-$controlleur->deconnexion();
+session_start();
+if(session_destroy()){
+    header("Location: index.php");
+}
 ?>

@@ -1,7 +1,8 @@
 <?php
 class Utilisateur {
     private $id;
-    private $actif;
+    private $entreprise;
+    private $activation;
     private $role;
     private $specialisation;
     private $authentification;
@@ -16,12 +17,13 @@ class Utilisateur {
     private $code_postal;
     private $date;
 
-    public function __construct($id, $actif, $role, $specialisation, $authentification, $nom, $prenom, $email, $telephone, $numero_de_rue, $rue, $ville, $code_postal, $date){
+    public function __construct($id, $entreprise, $activation, $role, $specialisation, $authentification, $nom, $prenom, $email, $telephone, $numero_de_rue, $rue, $ville, $code_postal, $date){
         $this->id = $id;
-        if($actif==True || $actif==1){
-            $this->actif = 1;
-        }elseif($actif==False || $actif==0){
-            $this->actif = 0;
+        $this->entreprise = $entreprise;
+        if($activation==True || $activation==1){
+            $this->activation = 1;
+        }elseif($activation==False || $activation==0){
+            $this->activation = 0;
         }
         $this->role = $role;
         if(!empty($specialisation->getId())){
@@ -46,8 +48,12 @@ class Utilisateur {
         return $this->id;
     }
 
-    public function getActif(){
-        return $this->actif;
+    public function getEntreprise(){
+        return $this->entreprise;
+    }
+
+    public function getActivation(){
+        return $this->activation;
     }
 
     public function getRole(){
@@ -106,8 +112,12 @@ class Utilisateur {
         $this->id = $id;
     }
 
-    public function setActif($actif){
-        $this->actif = $actif;
+    public function setEntreprise($entreprise){
+        $this->entreprise = $entreprise;
+    }
+
+    public function setActivation($activation){
+        $this->activation = $activation;
     }
     
     public function setSpecialisation($specialisation){

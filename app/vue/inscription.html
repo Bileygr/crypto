@@ -35,7 +35,12 @@
             <input type="text" name="ville" id="ville" placeholder="ville"><br>
 
             <label for="code_postal">Code postal</label>
-            <input type="number" name="code_postal" id="code_postal" placeholder="Code postal"><br>
+            <input type="text" name="code_postal" id="code_postal" placeholder="Code postal"><br>
+
+            <label for="entreprise">Entreprise</label>
+            <select id="entreprise" name="entreprise">
+                {{ entreprises }}
+            </select><br>
 
             <label for="role">Rôle</label>
             <select id="role" name="role">
@@ -58,7 +63,7 @@
 
         <script>
             document.getElementById('role').addEventListener('change', function () {
-                var style = this.value == 3 ? 'block' : 'none';
+                var style = this.value == 2 ? 'block' : 'none';
                 document.getElementById('div_specialisation').style.display = style;
             });
         </script>
