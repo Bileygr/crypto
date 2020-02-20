@@ -1,12 +1,7 @@
 <?php
 /**
  * Importe tout les fichiers dont le projet à besoin.
- */
-
-/*
- * Fait appel à la classe qui permet de faire afficher des données dans les templates.
 */
-require_once("app/controlleur/moteur.php");
 
 require_once("app/totp/GoogleAuthenticator.php");
 
