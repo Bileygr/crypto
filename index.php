@@ -21,6 +21,13 @@ if(isset($_SESSION["utilisateur"])){
         <p class=\"lead\">Entreprise : ".$utilisateur->getEntreprise()->getNom()."</p>
         <p class=\"lead\">Rôle : ".$utilisateur->getRole()->getNom()."</p>
     ";
+
+    if($utilisateur->getSpecialisation()->getId() != 1){
+        $contenu .=
+        "
+            <p class=\"lead\">Spécialisation : ".$utilisateur->getSpecialisation()->getNom()."</p>
+        ";
+    }
 }else{
 
     $bar_links = 

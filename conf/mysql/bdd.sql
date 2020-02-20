@@ -17,25 +17,42 @@ CREATE TABLE IF NOT EXISTS authentification (
   authentification_cle_secrete varchar(20) NOT NULL,
   PRIMARY KEY (utilisateur_id)
 );
+INSERT INTO authentification(utilisateur_id, authentification_mot_de_passe, authentification_cle_secrete) VALUES
+(1, '$2y$10$PGsC94HRkR4kFeilkFdYU.pVd3PpzFP0tdny/ibXbZ8EX2zTnpWp.', 'UYQO3LQ3OGGMVQHE'),
+(2, '$2y$10$.FG2csQDlzvSYKvNnskAdelHoCllG73Ve.WE5/i8v3VTUYpJLemBi', 'SXUXAOU47ZJFTTDP');
 
-DROP TABLE IF EXISTS consultation CASCADE;
-CREATE TABLE IF NOT EXISTS consultation (
-  consultation_id SERIAL,
-  consultation_doc_id integer NOT NULL,
-  consultation_patient_id integer NOT NULL,
-  diagnostique_id integer NOT NULL,
-  consultation_prix float NOT NULL,
-  consultation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (consultation_id)
+DROP TABLE IF EXISTS entreprise CASCADE;
+CREATE TABLE IF NOT EXISTS entreprise (
+	entreprise_siren varchar(9) NOT NULL,
+	entreprise_activation boolean NOT NULL,
+	entreprise_nom varchar(150) NOT NULL,
+	entreprise_telephone varchar(15) NOT NULL,
+	entreprise_email varchar(50) NOT NULL,
+	entreprise_numero_de_rue integer NOT NULL,
+	entreprise_rue varchar(150) NOT NULL,
+	entreprise_ville varchar(100) NOT NULL,
+	entreprise_code_postal integer NOT NULL,
+  entreprise_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (entreprise_siren)
 );
 
-DROP TABLE IF EXISTS diagnostique CASCADE;
-CREATE TABLE IF NOT EXISTS diagnostique(
-  consultation_id integer NOT NULL UNIQUE,
-  maladie_id integer,
-  diagnostique_note text,
-  diagnostique_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (consultation_id)
+INSERT INTO entreprise(entreprise_siren, entreprise_activation, entreprise_nom, entreprise_telephone,
+	entreprise_email, entreprise_numero_de_rue, entreprise_rue, entreprise_ville, entreprise_code_postal) VALUES
+('123456789', TRUE, 'PalaciosCorp', '0100000000', 'masvirtual@gmail.com', '93', 'Rue Barrault', 'Paris', '75013'),
+('012345678', TRUE, 'DrisseCorp', '0100000001', 'mattdrisse@gmail.com', '8', 'Rue de la Mitrie', 'Nantes', '44000'),
+('123456788', TRUE, 'KeitaCorp',  '0100000002', 'cheiksiramakankeita@gmail.com', '2', 'Rue de Monbret', 'Rouen', '76000'),
+('112345676', TRUE, 'DialloCorp',  '0100000003', 'ibenz82@gmail.com', '26', 'Rue de la Métallurgie', 'Lyon', '69003'),
+('231454658', TRUE, 'MaigrotCorp',  '0100000004', 'maigalex91@gmail.com', '3', 'Rue Palaprat', 'Toulouse', '31000');
+
+DROP TABLE IF EXISTS examen CASCADE;
+CREATE TABLE IF NOT EXISTS examen (
+  examen_id SERIAL,
+  docteur_id integer NOT NULL,
+  patient_id integer NOT NULL,
+  interpretation_id integer NOT NULL,
+  examen_prix float NOT NULL,
+  examen_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (examen_id)
 );
 
 DROP TABLE IF EXISTS liste_des_medicaments CASCADE;
@@ -43,6 +60,16 @@ CREATE TABLE IF NOT EXISTS liste_des_medicaments (
   traitement_id integer,
   medicament_id integer NOT NULL,
   medicament_dose float NOT NULL
+);
+
+DROP TABLE IF EXISTS interpretation CASCADE;
+CREATE TABLE IF NOT EXISTS interpretation(
+  examen_id integer NOT NULL UNIQUE,
+  docteur_id integer NOT NULL,
+  maladie_id integer,
+  interpretation_note text,
+  interpretation_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (examen_id)
 );
 
 DROP TABLE IF EXISTS liste_des_symptomes CASCADE;
@@ -67,6 +94,21 @@ CREATE TABLE IF NOT EXISTS medicament (
   PRIMARY KEY (medicament_id)
 );
 
+DROP TABLE IF EXISTS patient CASCADE;
+CREATE TABLE IF NOT EXISTS patient (
+  patient_id SERIAL,
+  patient_nom varchar(50) NOT NULL,
+  patient_prenom varchar(50) NOT NULL,
+  patient_email varchar(50) NOT NULL,
+  patient_telephone varchar(20) NOT NULL,
+  patient_numero_de_rue integer NOT NULL,
+  patient_rue varchar(75) NOT NULL,
+  patient_ville varchar(75) NOT NULL,
+  patient_code_postal integer NOT NULL,
+  patient_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (patient_id)
+);
+
 DROP TABLE IF EXISTS role CASCADE;
 CREATE TABLE IF NOT EXISTS role (
   role_id SERIAL,
@@ -75,11 +117,13 @@ CREATE TABLE IF NOT EXISTS role (
 );
 
 INSERT INTO role(role_id, role_nom) VALUES
-(1, 'Patient'),
-(2, 'Paramédical'),
-(3, 'Médecin'),
-(4, 'Administration'),
-(5, 'Chercheur');
+(1, 'Paramédical'),
+(2, 'Médecin'),
+(3, 'Administration'),
+(4, 'Statistiques'),
+(5, 'Super user'),
+(6, 'Superviseur'),
+(7, 'SSII');
 
 DROP TABLE IF EXISTS symptome CASCADE;
 CREATE TABLE IF NOT EXISTS symptome (
@@ -147,6 +191,7 @@ INSERT INTO specialisation(specialisation_id, specialisation_nom) VALUES
 DROP TABLE IF EXISTS traitement CASCADE;
 CREATE TABLE IF NOT EXISTS traitement (
   traitement_id SERIAL,
+  traitement_nom varchar(10),
   traitement_description text,
   PRIMARY KEY (traitement_id)
 );
@@ -154,13 +199,14 @@ CREATE TABLE IF NOT EXISTS traitement (
 DROP TABLE IF EXISTS utilisateur CASCADE;
 CREATE TABLE IF NOT EXISTS utilisateur (
   utilisateur_id SERIAL,
-  utilisateur_actif boolean,
+  entreprise_siren varchar(9) NOT NULL,
+  utilisateur_activation boolean NOT NULL,
   role_id integer NOT NULL,
   specialisation_id integer,
   utilisateur_nom varchar(50) NOT NULL,
   utilisateur_prenom varchar(50) NOT NULL,
-  utilisateur_email varchar(50) NOT NULL,
-  utilisateur_telephone varchar(20) NOT NULL,
+  utilisateur_email varchar(50) NOT NULL UNIQUE,
+  utilisateur_telephone varchar(20) NOT NULL UNIQUE,
   utilisateur_numero_de_rue integer NOT NULL,
   utilisateur_rue varchar(75) NOT NULL,
   utilisateur_ville varchar(75) NOT NULL,
@@ -169,15 +215,22 @@ CREATE TABLE IF NOT EXISTS utilisateur (
   PRIMARY KEY (utilisateur_id)
 );
 
+INSERT INTO utilisateur(utilisateur_id, entreprise_siren, utilisateur_activation, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone, 
+  utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) VALUES
+(1, '123456788', True, 7, 1, 'Keita', 'Cheik-Siramakan', 'cheiksiramakankeita@gmail.com', '0605557802', 57, 'Boulevard de l Yerres', 'Evry-Courcouronnes', 91000),
+(2, '012345678', True, 6, 1, 'Drisse', 'Matthieu', 'mattdrisse@gmail.com', '0600000000', 1, 'Je ne sais pas', 'Campagne', 91000);
+
 ALTER TABLE authentification
   ADD CONSTRAINT fk_authentification_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE CASCADE;
 
-ALTER TABLE consultation
-  ADD CONSTRAINT fk_consultation_doc FOREIGN KEY (consultation_doc_id) REFERENCES utilisateur (utilisateur_id) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT fk_consultation_patient FOREIGN KEY (consultation_patient_id) REFERENCES utilisateur (utilisateur_id) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE examen
+  ADD CONSTRAINT fk_examen_docteur FOREIGN KEY (docteur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT fk_examen_patient FOREIGN KEY (patient_id) REFERENCES patient (patient_id) ON DELETE NO ACTION ON UPDATE CASCADE;
 
-ALTER TABLE diagnostique
-  ADD CONSTRAINT fk_diagnostique_consultation FOREIGN KEY (consultation_id) REFERENCES consultation (consultation_id) ON DELETE NO ACTION ON UPDATE CASCADE;
+ALTER TABLE interpretation
+  ADD CONSTRAINT fk_interpretation_examen FOREIGN KEY (examen_id) REFERENCES examen (examen_id) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT fk_interpretation_maladie FOREIGN KEY (maladie_id) REFERENCES maladie (maladie_id) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT fk_interpretation_docteur FOREIGN KEY (docteur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE liste_des_medicaments
 ADD CONSTRAINT fk_liste_des_medicaments_traitement FOREIGN KEY (traitement_id) REFERENCES traitement (traitement_id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -191,6 +244,7 @@ ALTER TABLE maladie
   ADD CONSTRAINT fk_maladie_traitement FOREIGN KEY (traitement_id) REFERENCES traitement (traitement_id) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 ALTER TABLE utilisateur
+  ADD CONSTRAINT fk_utilisateur_entreprise FOREIGN KEY (entreprise_siren) REFERENCES entreprise (entreprise_siren) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT fk_utilisateur_role FOREIGN KEY (role_id) REFERENCES role (role_id) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT fk_utilisateur_specialisation FOREIGN KEY (specialisation_id) REFERENCES specialisation (specialisation_id) ON DELETE NO ACTION ON UPDATE CASCADE;
 COMMIT;

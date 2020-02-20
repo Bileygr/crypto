@@ -35,7 +35,7 @@ class EntrepriseDAO implements CRUD {
     }
 
     public function update($entreprise){
-
+		
     }
 }
 ?>

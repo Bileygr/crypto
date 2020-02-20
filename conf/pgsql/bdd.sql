@@ -17,10 +17,13 @@ CREATE TABLE IF NOT EXISTS authentification (
   authentification_cle_secrete varchar(20) NOT NULL,
   PRIMARY KEY (utilisateur_id)
 );
+INSERT INTO authentification(utilisateur_id, authentification_mot_de_passe, authentification_cle_secrete) VALUES
+(1, '$2y$10$PGsC94HRkR4kFeilkFdYU.pVd3PpzFP0tdny/ibXbZ8EX2zTnpWp.', 'UYQO3LQ3OGGMVQHE'),
+(2, '$2y$10$.FG2csQDlzvSYKvNnskAdelHoCllG73Ve.WE5/i8v3VTUYpJLemBi', 'SXUXAOU47ZJFTTDP');
 
 DROP TABLE IF EXISTS entreprise CASCADE;
 CREATE TABLE IF NOT EXISTS entreprise (
-	entreprise_siren integer NOT NULL,
+	entreprise_siren varchar(9) NOT NULL,
 	entreprise_activation boolean NOT NULL,
 	entreprise_nom varchar(150) NOT NULL,
 	entreprise_telephone varchar(15) NOT NULL,
@@ -35,11 +38,11 @@ CREATE TABLE IF NOT EXISTS entreprise (
 
 INSERT INTO entreprise(entreprise_siren, entreprise_activation, entreprise_nom, entreprise_telephone,
 	entreprise_email, entreprise_numero_de_rue, entreprise_rue, entreprise_ville, entreprise_code_postal) VALUES
-(123456789, TRUE, 'PalaciosCorp', '0100000000', 'masvirtual@gmail.com', '93', 'Rue Barrault', 'Paris', '75013'),
-(012345678, TRUE, 'DrisseCorp', '0100000001', 'mattdrisse@gmail.com', '8', 'Rue de la Mitrie', 'Nantes', '44000'),
-(123456788, TRUE, 'KeitaCorp',  '0100000002', 'cheiksiramakankeita@gmail.com', '2', 'Rue de Monbret', 'Rouen', '76000'),
-(112345676, TRUE, 'DialloCorp',  '0100000003', 'ibenz82@gmail.com', '26', 'Rue de la Métallurgie', 'Lyon', '69003'),
-(231454658, TRUE, 'MaigrotCorp',  '0100000004', 'maigalex91@gmail.com', '3', 'Rue Palaprat', 'Toulouse', '31000');
+('123456789', TRUE, 'PalaciosCorp', '0100000000', 'masvirtual@gmail.com', '93', 'Rue Barrault', 'Paris', '75013'),
+('012345678', TRUE, 'DrisseCorp', '0100000001', 'mattdrisse@gmail.com', '8', 'Rue de la Mitrie', 'Nantes', '44000'),
+('123456788', TRUE, 'KeitaCorp',  '0100000002', 'cheiksiramakankeita@gmail.com', '2', 'Rue de Monbret', 'Rouen', '76000'),
+('112345676', TRUE, 'DialloCorp',  '0100000003', 'ibenz82@gmail.com', '26', 'Rue de la Métallurgie', 'Lyon', '69003'),
+('231454658', TRUE, 'MaigrotCorp',  '0100000004', 'maigalex91@gmail.com', '3', 'Rue Palaprat', 'Toulouse', '31000');
 
 DROP TABLE IF EXISTS examen CASCADE;
 CREATE TABLE IF NOT EXISTS examen (
@@ -196,14 +199,14 @@ CREATE TABLE IF NOT EXISTS traitement (
 DROP TABLE IF EXISTS utilisateur CASCADE;
 CREATE TABLE IF NOT EXISTS utilisateur (
   utilisateur_id SERIAL,
-  entreprise_siren integer,
+  entreprise_siren varchar(9) NOT NULL,
   utilisateur_activation boolean NOT NULL,
   role_id integer NOT NULL,
   specialisation_id integer,
   utilisateur_nom varchar(50) NOT NULL,
   utilisateur_prenom varchar(50) NOT NULL,
-  utilisateur_email varchar(50) NOT NULL,
-  utilisateur_telephone varchar(20) NOT NULL,
+  utilisateur_email varchar(50) NOT NULL UNIQUE,
+  utilisateur_telephone varchar(20) NOT NULL UNIQUE,
   utilisateur_numero_de_rue integer NOT NULL,
   utilisateur_rue varchar(75) NOT NULL,
   utilisateur_ville varchar(75) NOT NULL,
@@ -211,6 +214,11 @@ CREATE TABLE IF NOT EXISTS utilisateur (
   utilisateur_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (utilisateur_id)
 );
+
+INSERT INTO utilisateur(utilisateur_id, entreprise_siren, utilisateur_activation, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone, 
+  utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) VALUES
+(1, '123456788', True, 7, 1, 'Keita', 'Cheik-Siramakan', 'cheiksiramakankeita@gmail.com', '0605557802', 57, 'Boulevard de l Yerres', 'Evry-Courcouronnes', 91000),
+(2, '012345678', True, 7, 6, 'Drisse', 'Matthieu', 'mattdrisse@gmail.com', '0600000000', 1, 'Je ne sais pas', 'Campagne', 91000);
 
 ALTER TABLE authentification
   ADD CONSTRAINT fk_authentification_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE CASCADE;
