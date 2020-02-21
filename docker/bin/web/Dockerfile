@@ -28,6 +28,12 @@ RUN docker-php-ext-enable xdebug
 RUN pecl install redis-4.0.1
 RUN docker-php-ext-enable redis
 
+# Install Postgre PDO
+RUN apt-get install -y libpq-dev \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
+
+
 # Other PHP7 Extensions
 
 RUN apt-get -y install libsqlite3-dev libsqlite3-0 mysql-client

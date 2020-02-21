@@ -4,7 +4,7 @@ services:
   web:
     build: 
       context: ./docker/bin/web
-    container_name: 'crypto-webserver'
+    container_name: 'crypto-web'
     restart: 'always'
     ports:
       - "8003:80"
