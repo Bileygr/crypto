@@ -3,3 +3,4 @@
 /data/*
 /logs/*
 #/www/**
+www/crypto/conf/settings.ini
