@@ -33,7 +33,7 @@ services:
     networks:
       - crypto-web-db-net
   PostgreSQL:
-    container_name: : 'crypto-pgsql'
+    container_name: 'crypto-pgsql'
     image: postgres
     restart: always
     ports:
