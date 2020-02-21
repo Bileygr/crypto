@@ -1,7 +1,6 @@
 <?php
 require_once("imports.php");
 
-
  if(isset($_POST["inscrire"])){
             $code_postal = $_POST["code_postal"];
             $email = $_POST["email"];
@@ -34,17 +33,16 @@ require_once("imports.php");
 
                             $entreprisedao->create($entreprise);
                             header("Location: index.php");
+                        }else{
+                            $erreur = "<b style=\"color:red;\">Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
                         }
                     }else{
-                        $erreur = "<b>Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
+                    $erreur = "<b style=\"color:red;\">Le format de l'email est invalide.</b>";
                     }
                 }else{
-                    $erreur = "<b>Le format de l'email est invalide.</b>";
+                $erreur = "<b style=\"color:red;\">L'un des champs est vide.</b>";
                 }
-            }else{
-                $erreur = "<b>L'un des champs est vide.</b>";
             }
-        
 ?>
 <!DOCTYPE html>
 <html>

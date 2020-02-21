@@ -117,13 +117,13 @@ require_once("imports.php");
                             $utilisateurdao->create($utilisateur);
                         }
                     }else{
-                        $erreur = "<b>Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
+                        $erreur = "<b style=\"color:red;\">Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
                     }
                 }else{
-                    $erreur = "<b>Le format de l'email est invalide.</b>";
+                    $erreur = "<b style=\"color:red;\">Le format de l'email est invalide.</b>";
                 }
             }else{
-                $erreur = "<b>L'un des champs est vide.</b>";
+                $erreur = "<b style=\"color:red;\">L'un des champs est vide.</b>";
             }
         }
 ?>
