@@ -36,7 +36,7 @@ services:
     networks:
       - crypto-web-bdd
   pgsql:
-    build: ./docker/bin/pgsql
+    image: postgres
     container_name: crypto-pgsql
     restart: always
     ports:
