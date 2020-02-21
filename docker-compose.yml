@@ -20,7 +20,7 @@ services:
     networks:
       - crypto-web-bdd
   mysql:
-    build: ./bin/mysql
+    build: ./docker/bin/mysql
     container_name: 'crypto-mysql'
     command: --default-authentication-plugin=mysql_native_password
     restart: 'always'
