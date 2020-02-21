@@ -127,7 +127,7 @@ require_once("imports.php");
 <!DOCTYPE html>
 <html>
     <header>
-        <title>Connexion</title>
+        <title>Inscription Utilisateur</title>
         <meta charset="UTF-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <link rel="icon" type="image/png" href="assets/registration/images/icons/favicon.ico"/>
