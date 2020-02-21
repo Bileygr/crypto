@@ -2,7 +2,7 @@ version: "3"
 
 services:
   web:
-    build: ./docker/bin/webserver
+    build: ./docker/bin/web
     container_name: 'crypto-webserver'
     restart: 'always'
     ports:
@@ -11,10 +11,10 @@ services:
     links:
       - mysql
     volumes:
-      - ${DOCUMENT_ROOT}:/var/www/html
-      - ${PHP_INI}:/usr/local/etc/php/php.ini
-      - ${VHOSTS_DIR}:/etc/apache2/sites-enabled
-      - ${LOG_DIR}:/var/log/apache2
+      - ${DOCUMENT_ROOT-./crypto}:/var/www/html
+      - ${PHP_INI-./docker/config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./docker/config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./docker/logs/apache2}:/var/log/apache2
     networks:
       - crypto-web-bdd
   mysql:
@@ -23,10 +23,10 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: 'always'
     ports:
-      - "3307:3306"
+      - "7003:3306"
     volumes:
-      - ${MYSQL_DATA_DIR}:/var/lib/mysql
-      - ${MYSQL_LOG_DIR}:/var/log/mysql
+      - ${MYSQL_DATA_DIR-./docker/data/mysql}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR-./docker/logs/mysql}:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
@@ -37,7 +37,7 @@ services:
     image: postgres
     restart: always
     ports:
-      - 5433:5432
+      - 6003:5432
     environment:
       POSTGRES_USER: 'telemedecine'
       POSTGRES_PASSWORD: ${PGSQL_USER_PASSWORD}
@@ -49,7 +49,7 @@ services:
     container_name: 'crypto-adminer'
     restart: always
     ports:
-      - 8080:8080
+      - 5003:8080
     environment:
       ADMINER_DEFAULT_SERVER: mysql
     networks:
