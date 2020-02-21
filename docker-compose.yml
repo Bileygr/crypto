@@ -38,7 +38,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - database_data:/var/lib/postgresql/data
+      - ${PGSQL_DATA_DIR-./data/mysql}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: 'root'
       POSTGRES_PASSWORD: 'postgres'
