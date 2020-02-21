@@ -33,10 +33,11 @@ services:
     networks:
       - crypto-web-db-net
   PostgreSQL:
+    container_name: : 'crypto-pgsql'
     image: postgres
     restart: always
     ports:
-      - 9432:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: 'root'
       POSTGRES_PASSWORD: 'postgres'
