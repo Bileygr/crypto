@@ -2,7 +2,8 @@ version: "3"
 
 services:
   web:
-    build: ./docker/bin/web
+    build: 
+      context: ./docker/bin/web
     container_name: 'crypto-webserver'
     restart: 'always'
     ports:
@@ -23,7 +24,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: 'always'
     ports:
-      - "3307:3306"
+      - "3305:3306"
     volumes:
       - ${MYSQL_DATA_DIR-./docker/data/mysql}:/var/lib/mysql
       - ${MYSQL_LOG_DIR-./docker/logs/mysql}:/var/log/mysql
