@@ -11,6 +11,7 @@ services:
       - "443:443"
     links:
       - mysql
+      - pgsql
     volumes:
       - ${DOCUMENT_ROOT-./crypto}:/var/www/html
       - ${PHP_INI-./docker/config/php/php.ini}:/usr/local/etc/php/php.ini
@@ -25,8 +26,13 @@ services:
     restart: 'always'
     ports:
       - "7003:3306"
+    volumes:
+      - ${MYSQL_DATA_DIR-./docker/data/mysql}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR-./docker/logs/mysql}:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: 'telemedecine'
+      MYSQL_PASS: ${MYSQL_USER_PASSWORD}
     networks:
       - crypto-web-bdd
   pgsql:
@@ -36,6 +42,8 @@ services:
     restart: always
     ports:
       - 6003:5432
+    volumes:
+      - ${PGSQL_DATA_DIR-./docker/data/pgsql}:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: 'telemedecine'
       POSTGRES_PASSWORD: ${PGSQL_USER_PASSWORD}
