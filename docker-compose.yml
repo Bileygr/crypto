@@ -12,10 +12,10 @@ services:
       - mysql
       - pgsql
     volumes:
-      - ${DOCUMENT_ROOT}:/var/www/html
-      - ${PHP_INI}:/usr/local/etc/php/php.ini
-      - ${VHOSTS_DIR}:/etc/apache2/sites-enabled
-      - ${LOG_DIR}:/var/log/apache2
+      - ./crypto:/var/www/html
+      - ./docker/config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/config/vhosts:/etc/apache2/sites-enabled
+      - ./docker/logs/apache2:/var/log/apache2
     networks:
       - crypto-web-bdd
   mysql:
@@ -26,13 +26,13 @@ services:
     ports:
       - 8004:3306
     volumes:
-      - ${MYSQL_DATA_DIR}:/var/lib/mysql
-      - ${MYSQL_LOG_DIR}:/var/log/mysql
+      - ./docker/data/mysql:/var/lib/mysql
+      - ./docker/logs/mysql:/var/log/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: 5Upx(Bqg5cK@U%*2d
       MYSQL_DATABASE: telemedecine
       MYSQL_USER: telemedecine
-      MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
+      MYSQL_PASSWORD: v:wGy,b%9:aIr%CQf
     networks:
       - crypto-web-bdd
   pgsql:
@@ -42,10 +42,10 @@ services:
     ports:
       - 8005:5432
     volumes:
-      - ${PGSQL_DATA_DIR}:/var/lib/postgresql/data
+      - ./docker/data/pgsql:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: telemedecine
-      POSTGRES_PASSWORD: ${PGSQL_USER_PASSWORD}
+      POSTGRES_PASSWORD: GLGTbaR*ir.YPxU)V
       POSTGRES_DB: telemedecine
     networks:
       - crypto-web-bdd
