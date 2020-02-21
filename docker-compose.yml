@@ -39,7 +39,7 @@ services:
       - mysql
     environment:
       PMA_HOST: mysql
-      PMA_PORT: 3307
+      PMA_PORT: 3306
     ports:
       - '8004:80'
     volumes:
