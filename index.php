@@ -67,6 +67,7 @@ foreach($lesutilisateurs as $utilisateur){
 $bar_links = "";
 $contenu = "";
 $tableau = "";
+$tableau_entreprises = "";
 
 if(isset($_SESSION["utilisateur"])){
     $utilisateur = $_SESSION["utilisateur"];
@@ -83,7 +84,6 @@ if(isset($_SESSION["utilisateur"])){
         <h1>Bonjour ".$utilisateur->getPrenom()." ".$utilisateur->getNom()."</h1>
         <p class=\"lead\">Entreprise : ".$utilisateur->getEntreprise()->getNom()."</p>
         <p class=\"lead\">Rôle : ".$utilisateur->getRole()->getNom()."</p>
-        <p><button type=\"button\" id=\"utilisateurs\" value=\"utilisateurs\">Utilisateurs</button> <button type=\"button\" id=\"entreprises\" value=\"entreprises\">Entreprises</button></p>
     ";
 
     if($utilisateur->getSpecialisation()->getId() != 1){
@@ -94,6 +94,11 @@ if(isset($_SESSION["utilisateur"])){
     }
 
     if($utilisateur->getRole()->getId() == 6 || $utilisateur->getRole()->getId() == 7){
+        $contenu .= 
+        "
+        <p><button type=\"button\" id=\"utilisateurs\" value=\"utilisateurs\">Utilisateurs</button> <button type=\"button\" id=\"entreprises\" value=\"entreprises\">Entreprises</button></p>
+        ";
+
         $tableau = 
         '
             <table class="table" id="table_user">
@@ -138,9 +143,14 @@ if(isset($_SESSION["utilisateur"])){
         <li class="nav-item">
             <a class="nav-link" href="connexion.php">Connexion</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="inscription.php">Inscription</a>
-        </li>  
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Inscription
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="inscription.php">Utilisateur</a>
+            <a class="dropdown-item" href="inscription-entreprise.php">Entreprise</a>
+        </li>
     ';
 
     $contenu = 
