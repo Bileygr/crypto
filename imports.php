@@ -23,8 +23,8 @@ require_once("app/modele/dao/CRUD.php");
 require_once("app/modele/dao/authentificationdao.php");
 require_once("app/modele/dao/entrepriseDAO.php");
 require_once("app/modele/dao/specialisationDAO.php");
-require_once("app/modele/dao/roleDAO.php");
-require_once("app/modele/dao/utilisateurDAO.php");
+require_once("app/modele/dao/roledao.php");
+require_once("app/modele/dao/utilisateurdao.php");
 
 // Classe qui permet la connexion à la base de données
 require_once("conf/connect.php");
