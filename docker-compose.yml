@@ -7,7 +7,7 @@ services:
     container_name: 'my-webserver'
     restart: 'always'
     ports:
-      - "8001:80"
+      - "80:80"
       - "443:443"
     links:
       - mysql
@@ -24,12 +24,12 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: 'always'
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - ${MYSQL_DATA_DIR-./data/mysql}:/var/lib/mysql
       - ${MYSQL_LOG_DIR-./logs/mysql}:/var/log/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: bla
+      MYSQL_ROOT_PASSWORD: tiger
     networks:
       - web-db-net
   phpmyadmin:
@@ -39,7 +39,7 @@ services:
       - mysql
     environment:
       PMA_HOST: mysql
-      PMA_PORT: 3307
+      PMA_PORT: 3306
     ports:
       - '8080:80'
     volumes:
