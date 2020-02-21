@@ -2,63 +2,64 @@ version: "3"
 
 services:
   web:
-    build: 
-      context: ./docker/bin/web
-    container_name: 'crypto-web'
-    restart: 'always'
+    build: ./docker/bin/web
+    container_name: crypto-web
+    restart: always
     ports:
-      - "8003:80"
-      - "443:443"
+      - 8003:80
+      - 443:443
     links:
       - mysql
       - pgsql
     volumes:
-      - ${DOCUMENT_ROOT-./crypto}:/var/www/html
-      - ${PHP_INI-./docker/config/php/php.ini}:/usr/local/etc/php/php.ini
-      - ${VHOSTS_DIR-./docker/config/vhosts}:/etc/apache2/sites-enabled
-      - ${LOG_DIR-./docker/logs/apache2}:/var/log/apache2
+      - ${DOCUMENT_ROOT}:/var/www/html
+      - ${PHP_INI}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR}:/etc/apache2/sites-enabled
+      - ${LOG_DIR}:/var/log/apache2
     networks:
       - crypto-web-bdd
   mysql:
     build: ./docker/bin/mysql
-    container_name: 'crypto-mysql'
+    container_name: crypto-mysql
     command: --default-authentication-plugin=mysql_native_password
-    restart: 'always'
+    restart: always
     ports:
-      - "8004:3306"
+      - 8004:3306
     volumes:
-      - ${MYSQL_DATA_DIR-./docker/data/mysql}:/var/lib/mysql
-      - ${MYSQL_LOG_DIR-./docker/logs/mysql}:/var/log/mysql
+      - ${MYSQL_DATA_DIR}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR}:/var/log/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: 'telemedecine'
-      MYSQL_USER: 'telemedecine'
+      MYSQL_DATABASE: telemedecine
+      MYSQL_USER: telemedecine
       MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
     networks:
       - crypto-web-bdd
   pgsql:
     build: ./docker/bin/pgsql
-    container_name: 'crypto-pgsql'
-    image: postgres
+    container_name: crypto-pgsql
     restart: always
     ports:
       - 8005:5432
     volumes:
-      - ${PGSQL_DATA_DIR-./docker/data/pgsql}:/var/lib/postgresql/data
+      - ${PGSQL_DATA_DIR}:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: 'telemedecine'
+      POSTGRES_USER: telemedecine
       POSTGRES_PASSWORD: ${PGSQL_USER_PASSWORD}
-      POSTGRES_DB: 'telemedecine'
+      POSTGRES_DB: telemedecine
     networks:
       - crypto-web-bdd
   adminer:
     image: adminer
-    container_name: 'crypto-adminer'
+    container_name: crypto-adminer
     restart: always
     ports:
       - 8006:8080
     environment:
       ADMINER_DEFAULT_SERVER: mysql
+    links:
+      - mysql
+      - pgsql
     networks:
       - crypto-web-bdd
 

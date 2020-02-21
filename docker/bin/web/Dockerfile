@@ -29,9 +29,9 @@ RUN pecl install redis-4.0.1
 RUN docker-php-ext-enable redis
 
 # Install Postgre PDO
-RUN apt-get install -y libpq-dev \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql
+RUN apt-get update \
+    && apt-get -y --no-install-recommends install  php7.2-mysql php7.2-pgsql \
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 
 # Other PHP7 Extensions
