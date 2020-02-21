@@ -1,9 +1,8 @@
 version: "3"
 
 services:
-  webserver:
-    build:
-      context: ./bin/webserver
+  web:
+    build: ./docker/bin/webserver
     container_name: 'crypto-webserver'
     restart: 'always'
     ports:
@@ -12,52 +11,39 @@ services:
     links:
       - mysql
     volumes:
-      - ${DOCUMENT_ROOT-./www}:/var/www/html
-      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
-      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
-      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+      - ${DOCUMENT_ROOT}:/var/www/html
+      - ${PHP_INI}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR}:/etc/apache2/sites-enabled
+      - ${LOG_DIR}:/var/log/apache2
     networks:
-      - crypto-web-db-net
+      - crypto-web-bdd
   mysql:
-    build: ./bin/mysql
+    build: ./docker/bin/mysql
     container_name: 'crypto-mysql'
     command: --default-authentication-plugin=mysql_native_password
     restart: 'always'
     ports:
       - "3307:3306"
     volumes:
-      - ${MYSQL_DATA_DIR-./data/mysql}:/var/lib/mysql
-      - ${MYSQL_LOG_DIR-./logs/mysql}:/var/log/mysql
+      - ${MYSQL_DATA_DIR}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR}:/var/log/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: bla
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     networks:
-      - crypto-web-db-net
-  PostgreSQL:
+      - crypto-web-bdd
+  pgsql:
+    build: ./docker/bin/pgsql
     container_name: 'crypto-pgsql'
     image: postgres
     restart: always
     ports:
       - 5433:5432
     environment:
-      POSTGRES_USER: 'root'
-      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_USER: 'telemedecine'
+      POSTGRES_PASSWORD: ${PGSQL_USER_PASSWORD}
       POSTGRES_DB: 'telemedecine'
     networks:
-      - crypto-web-db-net
-  # phpmyadmin:
-    # image: phpmyadmin/phpmyadmin
-    # container_name: 'my-phpmyadmin'
-    # links:
-      # - mysql
-    # environment:
-      # PMA_HOST: mysql
-      # PMA_PORT: 3306
-    # ports:
-      # - '8004:80'
-    # volumes:
-      # - /sessions
-    # networks:
-      # - web-db-net
+      - crypto-web-bdd
   adminer:
     image: adminer
     container_name: 'crypto-adminer'
@@ -67,7 +53,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: mysql
     networks:
-      - crypto-web-db-net
+      - crypto-web-bdd
 
 networks:
-  crypto-web-db-net:
+  crypto-web-bdd:

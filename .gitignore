@@ -1,1 +1,3 @@
-www/crypto/conf/settings.ini
+crypto/conf/settings.ini
+.env
+README.md

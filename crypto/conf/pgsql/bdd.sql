@@ -5,10 +5,12 @@
   * 2019-2020
 */
 
---DROP DATABASE IF EXISTS telemedecine;
---CREATE DATABASE telemedecine CHARACTER SET utf8 COLLATE utf8_general_ci;
+/*
+  DROP DATABASE IF EXISTS telemedecine;
+  CREATE DATABASE telemedecine CHARACTER SET utf8 COLLATE utf8_general_ci;
 
---USE telemedecine;
+  USE telemedecine;
+*/
 
 DROP TABLE IF EXISTS authentification CASCADE;
 CREATE TABLE IF NOT EXISTS authentification (
