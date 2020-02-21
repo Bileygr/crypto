@@ -6,7 +6,7 @@ class Utilisateur {
     private $role;
     private $specialisation;
     private $authentification;
-    private $liste_des_consultations;
+    //private $liste_des_consultations;
     private $nom;
     private $prenom;
     private $email;
@@ -20,17 +20,13 @@ class Utilisateur {
     public function __construct($id, $entreprise, $activation, $role, $specialisation, $authentification, $nom, $prenom, $email, $telephone, $numero_de_rue, $rue, $ville, $code_postal, $date){
         $this->id = $id;
         $this->entreprise = $entreprise;
-        if($activation==True || $activation==1){
-            $this->activation = 1;
-        }elseif($activation==False || $activation==0){
-            $this->activation = 0;
-        }
+        //if($activation==True || $activation==1){
+            $this->activation = $activation;
+        //}elseif($activation==False || $activation==0){
+           // $this->activation = 0;
+        //}
         $this->role = $role;
-        if(!empty($specialisation->getId())){
-            $this->specialisation = $specialisation;
-        }else{
-            $this->specialisation = null;
-        }
+        $this->specialisation = $specialisation;
         $this->authentification = $authentification;
         //$this->liste_des_consultations = $liste_des_consultations;
         $this->nom = $nom;

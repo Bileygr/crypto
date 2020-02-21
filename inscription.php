@@ -3,7 +3,6 @@ require_once("imports.php");
 
         $entreprisedao = new EntrepriseDAO;
         $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
-        $moteur = new Moteur;
         $roledao = new RoleDAO;
         $specialisationdao = new SpecialisationDAO;
         $utilisateurdao = new UtilisateurDAO;
@@ -21,7 +20,9 @@ require_once("imports.php");
         }
 
 		foreach($lesroles as $role) {
-			$roles .= '<option value="'.$role["role_id"].'">'.$role["role_nom"].'</option>';
+            if($role["role_id"] != "6" && $role["role_id"] != "7"){
+                $roles .= '<option value="'.$role["role_id"].'">'.$role["role_nom"].'</option>';
+            }
 		}
         
         foreach($lesspecialisations as $specialisation) {

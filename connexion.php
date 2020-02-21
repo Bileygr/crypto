@@ -9,7 +9,7 @@ if(isset($_POST["connecter"])){
         
         if(filter_var($email, FILTER_VALIDATE_EMAIL)){
             $utilisateurdao = new UtilisateurDAO;
-            $resultat = $utilisateurdao->read(["option"=>"email", "valeur"=>$email]);
+            $resultat = $utilisateurdao->read(["option"=>"email", "valeur"=>$email])[0];
 
             if($resultat){
                 $entreprise = new Entreprise(

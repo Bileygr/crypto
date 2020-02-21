@@ -170,25 +170,29 @@ class UtilisateurDAO implements CRUD {
 				break;
         }
 
-		return $requete->fetch();
+		return $requete->fetchAll();
     }
 
     public function update($utilisateur){
         $connect = new Connect;
         $bdd = $connect->connexion();
 
-        if($utilisateur->getRole()->getId() != 3){
-            $utilisateur->getSpecialisation()->setId(1);
+        $status = 0;
+
+        if($utilisateur->getActivation() != FALSE){
+            $status = 1;
         }
 
-        $requete = $bdd->prepare("UPDATE utilisateur SET utilisateur_actif=:actif, role_id=:role, 
+        $requete = $bdd->prepare("UPDATE utilisateur SET entreprise_siren = :siren, utilisateur_activation = :actif, role_id=:role, 
                                         specialisation_id=:specialisation, utilisateur_nom=:nom, utilisateur_prenom=:prenom,
                                         utilisateur_email=:email, utilisateur_telephone=:telephone, utilisateur_numero_de_rue=:numero_de_rue,
                                         utilisateur_rue=:rue, utilisateur_ville=:ville, utilisateur_code_postal=:code_postal WHERE utilisateur_id=:id");
-		$requete->execute([
-            "id"=>$utilisateur->getRole()->getId(),
+		$resultat = $requete->execute([
+            "id"=>$utilisateur->getId(),
+            "siren"=>$utilisateur->getEntreprise()->getSIREN(),
+            "role"=>$utilisateur->getRole()->getId(),
             "specialisation"=>$utilisateur->getSpecialisation()->getId(),
-            "actif"=>$utilisateur->getActif(),
+            "actif"=>$status,
             "nom"=>$utilisateur->getNom(),
             "prenom"=>$utilisateur->getPrenom(),
             "email"=>$utilisateur->getEmail(),
@@ -199,7 +203,7 @@ class UtilisateurDAO implements CRUD {
             "code_postal"=>$utilisateur->getCodepostal()
         ]);
 
-		return $requete->fetch();
+		return $resultat;
     }
 }
 ?>

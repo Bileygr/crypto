@@ -13,7 +13,7 @@ class Entreprise {
 
     public function __construct($SIREN, $activation, $nom, $telephone, $email, $numero_de_rue, $rue, $ville, $code_postal, $date){
         $this->SIREN = $SIREN;
-        $this->acivation = $activation;
+        $this->activation = $activation;
         $this->nom = $nom;
         $this->telephone = $telephone;
         $this->email = $email;
