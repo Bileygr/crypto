@@ -12,7 +12,7 @@ class UtilisateurDAO implements CRUD {
                                     VALUES(:entreprise, :activation, :role, :specialisation, :nom, :prenom, :email, :telephone, :numero_de_rue, :rue, :ville, :code_postal)");
         $resultat = $requete->execute([
             "entreprise"=>$utilisateur->getEntreprise()->getSIREN(),
-            "activation"=>$utilisateur->getActivation(),
+            "activation"=>0,
             "role"=>$utilisateur->getRole()->getId(),
             "specialisation"=>$utilisateur->getSpecialisation()->getId(),
             "nom"=>$utilisateur->getNom(),

@@ -111,6 +111,9 @@ require_once("imports.php");
                                 null
                             );
 
+                            //var_dump($utilisateur);
+                            //exit;
+
                             $utilisateurdao->create($utilisateur);
                         }
                     }else{

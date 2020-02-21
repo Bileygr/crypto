@@ -1,6 +1,4 @@
 <?php
-//require_once("../../../imports.php");
-
 class AuthentificationDAO implements CRUD{
     public function create($authentification){
         $connect = new Connect;
@@ -23,16 +21,16 @@ class AuthentificationDAO implements CRUD{
 
         $sql = "DELETE FROM authentification";
 
-		switch ($option["option"]) {
-			case 'id utilisateur':
+		switch ($option[0]) {
+			case 'id':
 				$requete = $bdd->prepare($sql." WHERE utilisateur_id=:valeur");
 				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
 				break;
-			case 'mot de passe':
+			case 'mdp':
 				$requete = $bdd->prepare($sql." WHERE authentification_mot_de_passe=:valeur");
 				$resultat = $requete->execute(["valeur" => $option["valeur"]]);
                 break;
-            case 'clé secrète':
+            case 'clé':
                 $requete = $bdd->prepare($sql." WHERE prenom=:valeur");
                 $resultat = $requete->execute(["valeur" => $option["valeur"]]);
                 break;
@@ -46,41 +44,43 @@ class AuthentificationDAO implements CRUD{
     }
 
     public function read($option){
+        var_dump($option);
+        exit;
         $connect = new Connect;
 		$bdd = $connect->connexion();
 
         $sql = "SELECT * FROM authentification";
 
-		switch ($option["option"]) {
-			case 'id utilisateur':
-				$requete = $bdd->prepare($sql." WHERE utilisateur_id=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			case 'mot de passe':
-				$requete = $bdd->prepare($sql." WHERE authentification_mot_de_passe=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-                break;
-            case 'clé secrète':
-                $requete = $bdd->prepare($sql." WHERE prenom=:valeur");
-                $requete->execute(["valeur" => $option["valeur"]]);
-                break;
-			default:
+		switch ($option[0]) {
+            case "":
 				$requete = $bdd->prepare($sql);
 				$requete->execute();
 				break;
+			case "id":
+				$requete = $bdd->prepare($sql." WHERE utilisateur_id=:valeur");
+				$requete->execute(["valeur" => $option[1]]);
+				break;
+			case "mdp":
+				$requete = $bdd->prepare($sql." WHERE authentification_mot_de_passe=:valeur");
+				$requete->execute(["valeur" => $option[1]]);
+                break;
+            case "cle":
+                $requete = $bdd->prepare($sql." WHERE prenom=:valeur");
+                $requete->execute(["valeur" => $option[1]]);
+                break;
 		}
 
-		$authentifications = array();
+		$liste_authentifications = array();
 
 		for($i=0; $authentification=$requete->fetch(); $i++){
-            $authentifications[$i] = new Authentification(
+            $liste_authentifications[$i] = new Authentification(
                 $authentification["utilisateur_id"],
                 $authentification['authentification_mot_de_passe'],
                 $authentification['authentification_cle_secrete']
             );
         }
 
-		return $authentifications;
+		return $liste_authentifications;
     }
 
     public function update($authentification){

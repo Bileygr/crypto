@@ -2,7 +2,7 @@
 require_once("imports.php");
 session_start();
 
-$entreprisedao = new ENtrepriseDAO;
+$entreprisedao = new EntrepriseDAO;
 $utilisateurdao = new UtilisateurDAO;
 
 $lesentreprises = $entreprisedao->read(["option"=>"", "valeur"=>""]);
