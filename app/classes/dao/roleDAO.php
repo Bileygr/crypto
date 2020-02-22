@@ -1,13 +1,11 @@
 <?php
-//require_once("app/imports.php");
-
 class RoleDAO implements CRUD {
 	public function create($role){
 		$connect = new Connect;
 		$bdd = $connect->connexion();
 
-		$requete = $bdd->prepare("INSERT INTO role(role_nom) VALUES(:nom)");
-		$requete->execute(["nom" => $option["nom"]]);
+		$requete = $bdd->prepare("INSERT INTO role(role_nom) VALUES(?)");
+		$requete->execute([$role->getNom()]);
 
 		return $requete->fetch();
 	}
@@ -15,25 +13,26 @@ class RoleDAO implements CRUD {
 	public function delete($option){
 		$connect = new Connect;
 		$bdd = $connect->connexion();
+		$resultat;
 
-		$sql = "DELETE FROM utilisateur WHERE role_id=:id";
+		$sql = "DELETE FROM role";
 
-		switch ($option["option"]) {
+		switch ($option[0]) {
+			case "":
+				$requete = $bdd->prepare($sql);
+				$resultat = $requete->execute();
+				break;
 			case "id":
-				$requete = $bdd->prepare($sql." WHERE role_id=:id");
-				$requete->execute(["id" => $role->getId()]);
+				$requete = $bdd->prepare($sql." WHERE role_id=?");
+				$resultat = $requete->execute([$role->getId()]);
 				break;
 			case "nom":
-				$requete = $bdd->prepare($sql." WHERE role_nom=:nom");
-				$requete->execute(["nom" => $role->getNom()]);
-				break;
-			default:
-				$requete = $bdd->prepare($sql);
-				$requete->execute();
+				$requete = $bdd->prepare($sql." WHERE role_nom=?");
+				$resultat = $requete->execute([$role->getNom()]);
 				break;
 		}
 
-		return $requete->fetch();
+		return $resultat;
 	}
 
     public function read($option){
@@ -42,32 +41,41 @@ class RoleDAO implements CRUD {
 
 		$sql = "SELECT * FROM role";
 
-		switch ($option["option"]) {
-			case 'id':
-				$requete = $bdd->prepare($sql." WHERE role_id=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			case 'titre':
-				$requete = $bdd->prepare($sql." WHERE role_nom=:valeur");
-				$requete->execute(["valeur" => $option["valeur"]]);
-				break;
-			default:
+		switch ($option[0]) {
+			case "":
 				$requete = $bdd->prepare($sql);
 				$requete->execute();
 				break;
+			case 'id':
+				$requete = $bdd->prepare($sql." WHERE role_id=?");
+				$requete->execute([$option[1]]);
+				break;
+			case 'nom':
+				$requete = $bdd->prepare($sql." WHERE role_nom=?");
+				$requete->execute([$option[1]]);
+				break;
 		}
 
-		return $requete->fetchAll();
+		$liste_roles = array();
+
+		for($i=0; $role=$requete->fetch(); $i++){
+            $liste_roles[$i] = new Role(
+                $role["role_id"],
+                $role['role_nom']
+            );
+        }
+
+		return $liste_roles;
 	}
 
 	public function update($role){
 		$connect = new Connect;
 		$bdd = $connect->connexion();
 
-		$requete = $bdd->prepare("UPDATE role SET role_nom=:nom WHERE role_id=:id");
-		$requete->execute(["id" => $role->getId(), "nom"=>$role->getNom()]);
+		$requete = $bdd->prepare("UPDATE role SET role_nom=? WHERE role_id=?");
+		$resultat = $requete->execute([$role->getNom(), $role->getId()]);
 
-		return $requete->fetch();
+		return $resultat;
 	}
 }
 ?>

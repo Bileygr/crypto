@@ -5,8 +5,8 @@ session_start();
 $entreprisedao = new EntrepriseDAO;
 $utilisateurdao = new UtilisateurDAO;
 
-$lesentreprises = $entreprisedao->read(["option"=>"", "valeur"=>""]);
-$lesutilisateurs = $utilisateurdao->read(["option"=>"", "valeur"=>""]);
+$lesentreprises = $entreprisedao->read(["", ""]);
+$lesutilisateurs = $utilisateurdao->read(["", ""]);
 
 $entreprises = "";
 $utilisateurs = "";
@@ -17,7 +17,7 @@ $activation_entreprise = "";
 $status_entreprise = "";
 
 foreach($lesentreprises as $entreprise){
-    if($entreprise["entreprise_activation"] == True){
+    if($entreprise->getActivation() == True){
         $activation_entreprise = "<input type=\"submit\" name=\"desactiver_entr\" value=\"Désactiver\">";
         $status_entreprise = "Actif";
     }else{
@@ -28,18 +28,18 @@ foreach($lesentreprises as $entreprise){
     $entreprises .=
     '
         <tr>
-            <td>'.$entreprise["entreprise_siren"].'</td>
-            <td>'.$entreprise["entreprise_nom"].'</td>
-            <td>'.$entreprise["entreprise_email"].'</td>
-            <td>'.$entreprise["entreprise_telephone"].'</td>
+            <td>'.$entreprise->getSIREN().'</td>
+            <td>'.$entreprise->getNom().'</td>
+            <td>'.$entreprise->getEmail().'</td>
+            <td>'.$entreprise->getTelephone().'</td>
             <td>'.$status_entreprise.'</td>
-            <td><form method="POST"><input type="text" name="siren" value="'.$entreprise["entreprise_siren"].'" hidden>'.$activation_entreprise.'</form></td>
+            <td><form method="POST"><input type="text" name="siren" value="'.$entreprise->getSIREN().'" hidden>'.$activation_entreprise.'</form></td>
         </tr>
     '; 
 }
 
 foreach($lesutilisateurs as $utilisateur){
-    if($utilisateur["utilisateur_activation"] == True){
+    if($utilisateur->getActivation() == True){
         $activation = "<input type=\"submit\" name=\"desactiver\" value=\"Désactiver\">";
         $status = "Actif";
     }else{
@@ -47,24 +47,24 @@ foreach($lesutilisateurs as $utilisateur){
         $status = "Inactif";
     }
 
-    if($utilisateur["role_id"] == "7"){
+    if($utilisateur->getRole()->getNom() == "7"){
         $activation = "Impossible";
     }
 
     $utilisateurs .=
     '
         <tr>
-            <td>'.$utilisateur["utilisateur_nom"].'</td>
-            <td>'.$utilisateur["utilisateur_prenom"].'</td>
-            <td>'.$utilisateur["entreprise_nom"].'</td>
-            <td>'.$utilisateur["role_nom"].'</td>
+            <td>'.$utilisateur->getNom().'</td>
+            <td>'.$utilisateur->getPrenom().'</td>
+            <td>'.$utilisateur->getEntreprise()->getNom().'</td>
+            <td>'.$utilisateur->getRole()->getNom().'</td>
             <td>'.$status.'</td>
-            <td><form method="POST"><input type="text" name="id" value="'.$utilisateur["utilisateur_id"].'" hidden>'.$activation.'</form></td>
+            <td><form method="POST"><input type="text" name="id" value="'.$utilisateur->getId().'" hidden>'.$activation.'</form></td>
         </tr>
     '; 
 }
 
-$bar_links = "";
+$nav_links = "";
 $contenu = "";
 $tableau = "";
 $tableau_entreprises = "";
@@ -72,7 +72,7 @@ $tableau_entreprises = "";
 if(isset($_SESSION["utilisateur"])){
     $utilisateur = $_SESSION["utilisateur"];
 
-    $bar_links = 
+    $nav_links = 
     '
         <li class="nav-item">
             <a class="nav-link" href="deconnexion.php">Déconnexion</a>
@@ -138,7 +138,7 @@ if(isset($_SESSION["utilisateur"])){
         ';
     }
 }else{
-    $bar_links = 
+    $nav_links = 
     '
         <li class="nav-item">
             <a class="nav-link" href="connexion.php">Connexion</a>
@@ -155,138 +155,40 @@ if(isset($_SESSION["utilisateur"])){
 
     $contenu = 
     "
-    <h1>Bienvenue sur le réseau de télémédecine!</h1>
-    <p class=\"lead\">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
+        <h1>Bienvenue sur le réseau de télémédecine!</h1>
+        <p class=\"lead\">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
     ";
 }
 
 if(isset($_POST["activer"])){
-    $utilisateur = $utilisateurdao->read(["option"=>"id", "valeur"=>$_POST["id"]])[0];
-    $authentification = new Authentification(null, $utilisateur["authentification_mot_de_passe"], $utilisateur["authentification_cle_secrete"]);
-
-    $entreprise = new Entreprise(
-        $utilisateur["entreprise_siren"], 
-        $utilisateur["entreprise_activation"], 
-        $utilisateur["entreprise_nom"],
-        $utilisateur["entreprise_telephone"],
-        $utilisateur["entreprise_email"],
-        $utilisateur["entreprise_numero_de_rue"],
-        $utilisateur["entreprise_rue"],
-        $utilisateur["entreprise_ville"],
-        $utilisateur["entreprise_code_postal"],
-        $utilisateur["entreprise_date"]
-    );
-
-    $role = new Role($utilisateur["role_id"], $utilisateur["role_nom"]);
-    $specialisation = new Specialisation($utilisateur["specialisation_id"], $utilisateur["specialisation_nom"]);
-
-    $utilisateur = new Utilisateur(
-        $utilisateur["utilisateur_id"],
-        $entreprise,
-        True,
-        $role,
-        $specialisation,
-        $authentification,
-        $utilisateur["utilisateur_nom"],
-        $utilisateur["utilisateur_prenom"],
-        $utilisateur["utilisateur_email"],
-        $utilisateur["utilisateur_telephone"],
-        $utilisateur["utilisateur_numero_de_rue"],
-        $utilisateur["utilisateur_rue"],
-        $utilisateur["utilisateur_ville"],
-        $utilisateur["utilisateur_code_postal"],
-        $utilisateur["utilisateur_date"]
-    );
-
-    $utilisateur->getAuthentification()->setUtilisateur($utilisateur);
-
+    $utilisateur = $utilisateurdao->read(["id", $_POST["id"]])[0];
+    $utilisateur->setActivation(True);
     $utilisateurdao->update($utilisateur);
     header("Location: index.php");
 }
 
 if(isset($_POST["desactiver"])){
-    $utilisateur = $utilisateurdao->read(["option"=>"id", "valeur"=>$_POST["id"]])[0];
-    $authentification = new Authentification(null, $utilisateur["authentification_mot_de_passe"], $utilisateur["authentification_cle_secrete"]);
-
-    $entreprise = new Entreprise(
-        $utilisateur["entreprise_siren"], 
-        $utilisateur["entreprise_activation"], 
-        $utilisateur["entreprise_nom"],
-        $utilisateur["entreprise_telephone"],
-        $utilisateur["entreprise_email"],
-        $utilisateur["entreprise_numero_de_rue"],
-        $utilisateur["entreprise_rue"],
-        $utilisateur["entreprise_ville"],
-        $utilisateur["entreprise_code_postal"],
-        $utilisateur["entreprise_date"]
-    );
-
-    $role = new Role($utilisateur["role_id"], $utilisateur["role_nom"]);
-    $specialisation = new Specialisation($utilisateur["specialisation_id"], $utilisateur["specialisation_nom"]);
-
-    $utilisateur = new Utilisateur(
-        $utilisateur["utilisateur_id"],
-        $entreprise,
-        False,
-        $role,
-        $specialisation,
-        $authentification,
-        $utilisateur["utilisateur_nom"],
-        $utilisateur["utilisateur_prenom"],
-        $utilisateur["utilisateur_email"],
-        $utilisateur["utilisateur_telephone"],
-        $utilisateur["utilisateur_numero_de_rue"],
-        $utilisateur["utilisateur_rue"],
-        $utilisateur["utilisateur_ville"],
-        $utilisateur["utilisateur_code_postal"],
-        $utilisateur["utilisateur_date"]
-    );
-
-    $utilisateur->getAuthentification()->setUtilisateur($utilisateur);
-
+    $utilisateur = $utilisateurdao->read(["id", $_POST["id"]])[0];
+    $utilisateur->setActivation(False);
     $utilisateurdao->update($utilisateur);
     header("Location: index.php");
 }
 
 if(isset($_POST["activer_entr"])){
-    $entreprise = $entreprisedao->read(["option"=>"siren", "valeur"=>$_POST["siren"]])[0];
-    $entreprise = new Entreprise(
-        $entreprise["entreprise_siren"], 
-        TRUE, 
-        $entreprise["entreprise_nom"],
-        $entreprise["entreprise_telephone"],
-        $entreprise["entreprise_email"],
-        $entreprise["entreprise_numero_de_rue"],
-        $entreprise["entreprise_rue"],
-        $entreprise["entreprise_ville"],
-        $entreprise["entreprise_code_postal"],
-        $entreprise["entreprise_date"]
-    );
-
+    $entreprise = $entreprisedao->read(["siren", $_POST["siren"]])[0];
+    $entreprise->setActivation(True);
     $entreprisedao->update($entreprise);
     header("Location: index.php");
 }
 
 if(isset($_POST["desactiver_entr"])){
-    $entreprise = $entreprisedao->read(["option"=>"siren", "valeur"=>$_POST["siren"]])[0];
-    $entreprise = new Entreprise(
-        $entreprise["entreprise_siren"], 
-        FALSE, 
-        $entreprise["entreprise_nom"],
-        $entreprise["entreprise_telephone"],
-        $entreprise["entreprise_email"],
-        $entreprise["entreprise_numero_de_rue"],
-        $entreprise["entreprise_rue"],
-        $entreprise["entreprise_ville"],
-        $entreprise["entreprise_code_postal"],
-        $entreprise["entreprise_date"]
-    );
-
+    $entreprise = $entreprisedao->read(["siren", $_POST["siren"]])[0];
+    $entreprise->setActivation(False);
     $entreprisedao->update($entreprise);
     header("Location: index.php");
 }
@@ -325,7 +227,7 @@ if(isset($_POST["desactiver_entr"])){
                             </a>
                         </li>
                         <?php 
-                            echo $bar_links;
+                            echo $nav_links;
                         ?>
                     </ul>
                 </div>
@@ -370,7 +272,7 @@ if(isset($_POST["desactiver_entr"])){
         <!-- Footer -->
         <footer class="py-5 bg-dark">
             <div class="container">
-                <p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p>
+                <p class="m-0 text-center text-white">Copyright &copy; Télémédecine 2020</p>
             </div>
             <!-- /.container -->
         </footer>

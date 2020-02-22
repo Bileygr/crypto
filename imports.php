@@ -3,6 +3,7 @@
  * Importe tout les fichiers dont le projet à besoin.
 */
 
+// TOTP
 require_once("app/totp/GoogleAuthenticator.php");
 
 // Classes métier

@@ -1,48 +1,52 @@
 <?php
 require_once("imports.php");
 
- if(isset($_POST["inscrire"])){
-            $code_postal = $_POST["code_postal"];
-            $email = $_POST["email"];
-            $nom = $_POST["nom"];
-            $numero_de_rue = $_POST["numero_de_rue"];
-            $siren = $_POST["siren"];
-            $rue = $_POST["rue"];
-            $telephone = $_POST["telephone"];
-            $ville = $_POST["ville"];
+if(isset($_POST["inscrire"])){
+    $code_postal = $_POST["code_postal"];
+    $email = $_POST["email"];
+    $nom = $_POST["nom"];
+    $numero_de_rue = $_POST["numero_de_rue"];
+    $siren = $_POST["siren"];
+    $rue = $_POST["rue"];
+    $telephone = $_POST["telephone"];
+    $ville = $_POST["ville"];
 
-            if(!empty($code_postal) && !empty($email) && !empty($nom) && !empty($numero_de_rue) && !empty($siren) && 
-                !empty($rue) && !empty($telephone) && !empty($ville)){
+    if(!empty($code_postal) && !empty($email) && !empty($nom) && !empty($numero_de_rue) && !empty($siren) && 
+        !empty($rue) && !empty($telephone) && !empty($ville)){
                 
-                if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                     
-                    if(strlen($telephone) == 10){
-                            $entreprisedao = new EntrepriseDAO;
-                            $entreprise = new Entreprise(
-                                $siren, 
-                                FALSE, 
-                                $nom,
-                                $telephone,
-                                $email,
-                                $numero_de_rue,
-                                $rue,
-                                $ville,
-                                $code_postal,
-                                null
-                            );
+            if(strlen($telephone) == 10){
 
-                            $entreprisedao->create($entreprise);
-                            header("Location: index.php");
-                        }else{
-                            $erreur = "<b style=\"color:red;\">Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
-                        }
-                    }else{
-                    $erreur = "<b style=\"color:red;\">Le format de l'email est invalide.</b>";
-                    }
+                if(isset($_POST["justificatif"])){
+                    $entreprisedao = new EntrepriseDAO;
+                    $entreprise = new Entreprise(
+                        $siren, 
+                        FALSE, 
+                        $nom,
+                        $telephone,
+                        $email,
+                        $numero_de_rue,
+                        $rue,
+                        $ville,
+                        $code_postal,
+                        null
+                    );
+                    $entreprisedao->create($entreprise);
+                    header("Location: index.php");
                 }else{
-                $erreur = "<b style=\"color:red;\">L'un des champs est vide.</b>";
+                    $erreur = "<b style=\"color:red;\">Vérifiez que vous avez envoyé votre justificatif.</b>";
                 }
+            }else{
+                $erreur = "<b style=\"color:red;\">Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
             }
+        }else{
+            $erreur = "<b style=\"color:red;\">Le format de l'email est invalide.</b>";
+        }
+    }else{
+        $erreur = "<b style=\"color:red;\">L'un des champs est vide.</b>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -124,7 +128,7 @@ require_once("imports.php");
 
                         <div class="flex-sb-m w-full p-b-30">
                             <div class="contact100-form-checkbox">
-                                <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                                <input class="input-checkbox100" id="ckb1" type="checkbox" name="justificatif">
                                 <label class="label-checkbox100" for="ckb1">
                                     Justificatif de la qualification  “opérateur services santé” envoyé.
                                 </label>

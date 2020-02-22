@@ -1,6 +1,10 @@
 <?php 
 require_once("imports.php");
-$authentificationdao = new AuthentificationDAO();
-$liste_authentification = $authentificationdao->read(["cle", "UYQO3LQ3OGGMVQHE"]);
-var_dump($liste_authentification);
+$dao = new UtilisateurDAO();
+$liste = $dao->read(["id", 2]);
+if(!empty($liste)){
+    var_dump($liste);
+}else{
+    echo "Test a échoué.";
+}
 ?>

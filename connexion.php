@@ -9,57 +9,9 @@ if(isset($_POST["connecter"])){
         
         if(filter_var($email, FILTER_VALIDATE_EMAIL)){
             $utilisateurdao = new UtilisateurDAO;
-            $resultat = $utilisateurdao->read(["option"=>"email", "valeur"=>$email])[0];
+            $utilisateur = $utilisateurdao->read(["email", $email])[0];
 
-            if($resultat){
-                $entreprise = new Entreprise(
-                    $resultat['entreprise_siren'],
-                    $resultat['entreprise_activation'],
-                    $resultat['entreprise_nom'],
-                    $resultat['entreprise_telephone'],
-                    $resultat['entreprise_email'],
-                    $resultat['entreprise_numero_de_rue'],
-                    $resultat['entreprise_rue'],
-                    $resultat['entreprise_ville'],
-                    $resultat['entreprise_code_postal'],
-                    $resultat['entreprise_date']
-                );
-
-                $role = new Role(
-                    $resultat['role_id'],
-                    $resultat['role_nom']
-                );
-
-                $specialisation = new specialisation(
-                    $resultat['specialisation_id'],
-                    $resultat['specialisation_nom']
-                );
-
-                $authentification = new Authentification(
-                    null,
-                    $resultat['authentification_mot_de_passe'],
-                    $resultat['authentification_cle_secrete']
-                );
-
-                $utilisateur = new Utilisateur(
-                    $resultat['utilisateur_id'],
-                    $entreprise,
-                    $resultat['utilisateur_activation'],
-                    $role,
-                    $specialisation,
-                    $authentification,
-                    $resultat['utilisateur_nom'],
-                    $resultat['utilisateur_prenom'],
-                    $resultat['utilisateur_email'],
-                    $resultat['utilisateur_telephone'],
-                    $resultat['utilisateur_numero_de_rue'],
-                    $resultat['utilisateur_rue'],
-                    $resultat['utilisateur_ville'],
-                    $resultat['utilisateur_code_postal'],
-                    $resultat['utilisateur_date']
-                );
-
-                $authentification->setUtilisateur($utilisateur);
+            if(!empty($utilisateur)){
 
                 if(password_verify($mot_de_passe, $utilisateur->getAuthentification()->getMotdepasse())){
 

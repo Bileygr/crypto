@@ -20,11 +20,11 @@ class Utilisateur {
     public function __construct($id, $entreprise, $activation, $role, $specialisation, $authentification, $nom, $prenom, $email, $telephone, $numero_de_rue, $rue, $ville, $code_postal, $date){
         $this->id = $id;
         $this->entreprise = $entreprise;
-        //if($activation==True || $activation==1){
-            $this->activation = $activation;
-        //}elseif($activation==False || $activation==0){
-           // $this->activation = 0;
-        //}
+        if($activation==True || $activation==1){
+            $this->activation = 1;
+        }elseif($activation==False || $activation==0){
+           $this->activation = 0;
+        }
         $this->role = $role;
         $this->specialisation = $specialisation;
         $this->authentification = $authentification;
@@ -113,7 +113,11 @@ class Utilisateur {
     }
 
     public function setActivation($activation){
-        $this->activation = $activation;
+        if($activation==True || $activation==1){
+            $this->activation = 1;
+        }elseif($activation==False || $activation==0){
+           $this->activation = 0;
+        }
     }
     
     public function setSpecialisation($specialisation){

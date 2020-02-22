@@ -13,7 +13,11 @@ class Entreprise {
 
     public function __construct($SIREN, $activation, $nom, $telephone, $email, $numero_de_rue, $rue, $ville, $code_postal, $date){
         $this->SIREN = $SIREN;
-        $this->activation = $activation;
+        if($activation==True || $activation==1){
+            $this->activation = 1;
+        }elseif($activation==False || $activation==0){
+           $this->activation = 0;
+        }
         $this->nom = $nom;
         $this->telephone = $telephone;
         $this->email = $email;
@@ -69,7 +73,11 @@ class Entreprise {
     }
 
     public function setActivation($activation){
-        $this->activation = $activation;
+        if($activation==True || $activation==1){
+            $this->activation = 1;
+        }elseif($activation==False || $activation==0){
+           $this->activation = 0;
+        }
     }
 
     public function setTelephone($telephone){

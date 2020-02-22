@@ -1,131 +1,111 @@
 <?php
 require_once("imports.php");
 
-        $entreprisedao = new EntrepriseDAO;
-        $googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
-        $roledao = new RoleDAO;
-        $specialisationdao = new SpecialisationDAO;
-        $utilisateurdao = new UtilisateurDAO;
+$googleAuthenticator = new PHPGangsta_GoogleAuthenticator();
 
-        $lesentreprises = $entreprisedao->read(["option"=>"", "valeur"=>""]);
-        $lesroles = $roledao->read(["option"=>"", "valeur"=>""]); 
-        $lesspecialisations = $specialisationdao->read(["option"=>"", "valeur"=>""]); 
+$entreprisedao = new EntrepriseDAO;
+$roledao = new RoleDAO;
+$specialisationdao = new SpecialisationDAO;
+$utilisateurdao = new UtilisateurDAO;
 
-        $entreprises = "";
-        $roles = "";
-        $specialisations = "";
+$lesentreprises = $entreprisedao->read(["", ""]);
+$lesroles = $roledao->read(["", ""]); 
+$lesspecialisations = $specialisationdao->read(["", ""]); 
 
-        foreach($lesentreprises as $entreprise){
-            $entreprises .='<option value="'.$entreprise["entreprise_siren"].'">'.$entreprise["entreprise_nom"].'</option>'; 
-        }
+$entreprises = "";
+$roles = "";
+$specialisations = "";
 
-		foreach($lesroles as $role) {
-            if($role["role_id"] != "6" && $role["role_id"] != "7"){
-                $roles .= '<option value="'.$role["role_id"].'">'.$role["role_nom"].'</option>';
-            }
-		}
+foreach($lesentreprises as $entreprise){
+    $entreprises .='<option value="'.$entreprise->getSIREN().'">'.$entreprise->getNom().'</option>'; 
+}
+
+foreach($lesroles as $role) {
+    if($role->getId() != "6" && $role->getId() != "7"){
+        $roles .= '<option value="'.$role->getId().'">'.$role->getNom().'</option>';
+    }
+}
         
-        foreach($lesspecialisations as $specialisation) {
-            $specialisations .= '<option value="'.$specialisation["specialisation_id"].'">'.$specialisation["specialisation_nom"].'</option>';
-		}
+foreach($lesspecialisations as $specialisation) {
+    $specialisations .= '<option value="'.$specialisation->getId().'">'.$specialisation->getNom().'</option>';
+}
 
-        if(isset($_POST["inscrire"])){
-            $code_postal = $_POST["code_postal"];
-            $confirmation_du_mot_de_passe = $_POST["confirmation_du_mot_de_passe"];
-            $email = $_POST["email"];
-            $entreprise = $_POST["entreprise"];
-            $mot_de_passe = $_POST["mot_de_passe"];
-            $nom = $_POST["nom"];
-            $numero_de_rue = $_POST["numero_de_rue"];
-            $prenom = $_POST["prenom"];
-            $role = $_POST["role"];
-            $rue = $_POST["rue"];
-            $specialisation = $_POST["specialisation"];
-            $telephone = $_POST["telephone"];
-            $ville = $_POST["ville"];
+if(isset($_POST["inscrire"])){
+    $code_postal = $_POST["code_postal"];
+    $confirmation_du_mot_de_passe = $_POST["confirmation_du_mot_de_passe"];
+    $email = $_POST["email"];
+    $entreprise = $_POST["entreprise"];
+    $mot_de_passe = $_POST["mot_de_passe"];
+    $nom = $_POST["nom"];
+    $numero_de_rue = $_POST["numero_de_rue"];
+    $prenom = $_POST["prenom"];
+    $role = $_POST["role"];
+    $rue = $_POST["rue"];
+    $specialisation = $_POST["specialisation"];
+    $telephone = $_POST["telephone"];
+    $ville = $_POST["ville"];
 
-            if(!empty($code_postal) && !empty($confirmation_du_mot_de_passe) && 
-                !empty($email) && !empty($mot_de_passe) && !empty($nom) && 
-                !empty($numero_de_rue) && !empty($prenom) && !empty($role) && 
-                !empty($rue) && !empty($telephone) && !empty($ville) && !empty($entreprise)){
+    if(!empty($code_postal) && !empty($confirmation_du_mot_de_passe) && 
+        !empty($email) && !empty($mot_de_passe) && !empty($nom) && 
+        !empty($numero_de_rue) && !empty($prenom) && !empty($role) && 
+        !empty($rue) && !empty($telephone) && !empty($ville) && !empty($entreprise)){
                 
-                if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
                     
-                    if(strlen($telephone) == 10){
+            if(strlen($telephone) == 10){
                         
-                        if($mot_de_passe == $confirmation_du_mot_de_passe){
-                            $cle_secrete = $googleAuthenticator->createSecret();
-                            $titre = 'Telemedecine ('.$email.')';
-                            $url_du_code_qr = $googleAuthenticator->getQRCodeGoogleUrl($titre, $cle_secrete);
+                if($mot_de_passe == $confirmation_du_mot_de_passe){
+                    $cle_secrete = $googleAuthenticator->createSecret();
+                    $titre = 'Telemedecine ('.$email.')';
+                    $url_du_code_qr = $googleAuthenticator->getQRCodeGoogleUrl($titre, $cle_secrete);
                             
-                            $code_qr = 
-                                "
-                                    <h2>Scannez votre code!</h2>
-                                    <p>Code QR <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en\" target=\"_blank\">Google Authenticator</a> : </p>
-                                    <br/>
-                                    <img src=".$url_du_code_qr."/>
-                                    <br/>
-                                    <p>Inscription réussie! -> <a href=\"connexion.php\">Clicquez ici!</a></p>
-                                ";
+                    $code_qr = 
+                    "
+                        <h2>Scannez votre code!</h2>
+                        <p>Code QR <a href=\"https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en\" target=\"_blank\"><u>Google Authenticator</u></a> : </p>
+                        <br>
+                        <img src=".$url_du_code_qr."/>
+                            <br/>
+                            <p>Inscription réussie! -> <a href=\"connexion.php\"><u>Clicquez ici!</u></a></p>
+                    ";
 
-                            $authentification = new Authentification(null, null, $cle_secrete);
-                            $authentification->setMotdepasse($mot_de_passe);
-                            $entreprise = $entreprisedao->read(["option"=>"siren", "valeur"=>$entreprise])[0];
-                            $entreprise = new Entreprise(
-                                $entreprise["entreprise_siren"], 
-                                $entreprise["entreprise_activation"], 
-                                $entreprise["entreprise_nom"],
-                                $entreprise["entreprise_telephone"],
-                                $entreprise["entreprise_email"],
-                                $entreprise["entreprise_numero_de_rue"],
-                                $entreprise["entreprise_rue"],
-                                $entreprise["entreprise_ville"],
-                                $entreprise["entreprise_code_postal"],
-                                $entreprise["entreprise_date"]
-                            );
-                            $role = $roledao->read(["option"=>"id", "valeur"=>$role])[0];
-                            $role = new Role($role["role_id"], $role["role_nom"]);
+                    $authentification = new Authentification(null, null, $cle_secrete);
+                    $authentification->setMotdepasse($mot_de_passe);
+                    $entreprise = $entreprisedao->read(["siren", $entreprise])[0];
+                    $role = $roledao->read(["id", $role])[0];
+                    $specialisation = $specialisationdao->read(["id", $specialisation])[0];
+                    $utilisateur = new Utilisateur(
+                        null,
+                        $entreprise,
+                        False,
+                        $role,
+                        $specialisation,
+                        $authentification,
+                        $nom,
+                        $prenom,
+                        $email,
+                        $telephone,
+                        $numero_de_rue,
+                        $rue,
+                        $ville,
+                        $code_postal,
+                        null
+                    );
 
-                            if(!empty($specialisation)){
-                                $specialisation = $specialisationdao->read(["option"=>"id", "valeur"=>$specialisation])[0];
-                                $specialisation = new Specialisation($specialisation["specialisation_id"],$specialisation["specialisation_nom"]);
-                            }else{
-                                $specialisation = new Specialisation(null, null);
-                            }
-
-                            $utilisateur = new Utilisateur(
-                                null,
-                                $entreprise,
-                                False,
-                                $role,
-                                $specialisation,
-                                $authentification,
-                                $nom,
-                                $prenom,
-                                $email,
-                                $telephone,
-                                $numero_de_rue,
-                                $rue,
-                                $ville,
-                                $code_postal,
-                                null
-                            );
-
-                            //var_dump($utilisateur);
-                            //exit;
-
-                            $utilisateurdao->create($utilisateur);
-                        }
-                    }else{
-                        $erreur = "<b style=\"color:red;\">Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
-                    }
+                    $utilisateurdao->create($utilisateur);
                 }else{
-                    $erreur = "<b style=\"color:red;\">Le format de l'email est invalide.</b>";
+                    $erreur = "<b style=\"color:red;\">Les mots de passe ne correspondent pas.</b>";
                 }
             }else{
-                $erreur = "<b style=\"color:red;\">L'un des champs est vide.</b>";
+                $erreur = "<b style=\"color:red;\">Le numéro de téléphone n'a pas la bonne longeur (10).</b>";
             }
+        }else{
+            $erreur = "<b style=\"color:red;\">Le format de l'email est invalide.</b>";
         }
+    }else{
+        $erreur = "<b style=\"color:red;\">L'un des champs est vide.</b>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
