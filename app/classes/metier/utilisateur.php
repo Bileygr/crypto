@@ -6,7 +6,6 @@ class Utilisateur {
     private $role;
     private $specialisation;
     private $authentification;
-    //private $liste_des_consultations;
     private $nom;
     private $prenom;
     private $email;
@@ -28,7 +27,6 @@ class Utilisateur {
         $this->role = $role;
         $this->specialisation = $specialisation;
         $this->authentification = $authentification;
-        //$this->liste_des_consultations = $liste_des_consultations;
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->email = $email;

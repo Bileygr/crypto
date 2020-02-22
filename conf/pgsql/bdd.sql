@@ -223,7 +223,7 @@ INSERT INTO utilisateur(utilisateur_id, entreprise_siren, utilisateur_activation
 (2, '012345678', True, 7, 6, 'Drisse', 'Matthieu', 'mattdrisse@gmail.com', '0600000000', 1, 'Je ne sais pas', 'Campagne', 91000);
 
 ALTER TABLE authentification
-  ADD CONSTRAINT fk_authentification_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE CASCADE;
+  ADD CONSTRAINT fk_authentification_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE NO ACTION;
 
 ALTER TABLE examen
   ADD CONSTRAINT fk_examen_docteur FOREIGN KEY (docteur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE NO ACTION ON UPDATE CASCADE,
