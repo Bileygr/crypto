@@ -15,7 +15,7 @@ class EntrepriseDAO implements CRUD {
                                     VALUES(:siren, :activation, :nom, :email, :telephone, :numero_de_rue, :rue, :ville, :code_postal)");
         $resultat = $requete->execute([
             "siren"=>$entreprise->getSIREN(),
-            "activation"=>$status,
+            "activation"=>$entreprise->getActivation(),
             "nom"=>$entreprise->getNom(),
             "email"=>$entreprise->getEmail(),
             "telephone"=>$entreprise->getTelephone(),

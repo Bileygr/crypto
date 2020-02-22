@@ -156,12 +156,25 @@ if(isset($_SESSION["utilisateur"])){
     $contenu = 
     "
         <h1>Bienvenue sur le réseau de télémédecine!</h1>
-        <p class=\"lead\">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
+        <p class=\"lead\">Une autre manière de soigner</p>
+        <p>
+            La télémédecine est une autre manière de soigner, avec les mêmes exigences de qualité et de sécurité que des actes classiques. 
+            Elle fait évoluer la médecine pour répondre à des défis tels que le vieillissement de la population ou encore le suivi approfondi des maladies chroniques. 
+            Elle est également un vecteur important d’amélioration de l’accès aux soins, en particulier dans les zones fragiles. 
+            En effet, elle permet une meilleure prise en charge au plus près du lieu de vie des patients et contribue aux prises en charge coordonnées par les professionnels de santé et les professionnels du secteur médico-social. 
+            Elle constitue aussi un facteur d’amélioration de l’efficience et de l’organisation des soins.
+        </p>
+        <p>
+            Elle permet d’établir un diagnostic, d’assurer, pour un patient à risque, un suivi à visée préventive ou un suivi post-thérapeutique, de requérir un avis spécialisé, 
+            de préparer une décision thérapeutique, de prescrire des produits de santé, de prescrire ou de réaliser des prestations ou des actes, ou d’effectuer une surveillance 
+            de l’état de santé des patients.
+        </p>
+        <p>
+            Elle n’a pas pour objectif de remplacer les actes médicaux en présentiel mais elle leur est complémentaire. 
+            Elle ne se substitue pas aux pratiques médicales plus habituelles mais constitue une réponse aux défis auxquels est confrontée l’offre de soins aujourd’hui. 
+            La télémédecine doit reposer sur un projet médical répondant à des priorités et aux besoins de la population d’un territoire et des professionnels de santé. 
+            C’est en ce sens qu’elle s’intègre au sein d’un parcours de soins.
+        </p>
     ";
 }
 
@@ -259,13 +272,31 @@ if(isset($_POST["desactiver_entr"])){
         <!-- Content section -->
         <section class="py-5">
             <div class="container">
-                <h1>Section Heading</h1>
-                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, suscipit, rerum quos facilis repellat architecto commodi officia atque nemo facere eum non illo voluptatem quae delectus odit vel itaque amet.</p>
+                <h1>La télémédecine</h1>
+                <p class="lead">La téléconsultation</p>
+                <p>
+                    La téléconsultation permet à un professionnel médical de donner une consultation à distance par l’intermédiaire des technologies de l’information et 
+                    de la communication. C’est un acte médical et une action synchrone (patient et médecin se parlent). Elle permet au professionnel de santé médical requis 
+                    de réaliser une évaluation globale du patient, en vue de définir la conduite à tenir à la suite de cette téléconsultation.
+                </p>
+                <p class="lead">La téléexpertise</p>
+                <p>
+                    La téléexpertise permet à un professionnel médical de solliciter à distance l’avis d’un ou de plusieurs professionnels médicaux par l’intermédiaire des 
+                    technologies de l’information et de la communication. C’est d’abord un acte médical et une action asynchrone (patient et médecin ne se parlent pas). 
+                    Cela concerne deux médecins pendant ou à distance de la consultation initiale. Cette action ne faisait pas l’objet d’une rémunération jusqu’à présent.
+                </p>
+                <p class="lead">La télésurveillance</p>
+                <p>La télésurveillance permet à un professionnel médical d’interpréter à distance des données recueillies sur le lieu de vie du patient.</p>
+                <p>Dans le cadre des expérimentations tarifaires ETAPES, elle concerne les patients en ALD, se situant en établissement de santé, en structure médico-sociale ou à leur domicile.</p>
+                <p>
+                    Les informations relatives à sa mise en œuvre dans le cadre d’ETAPES (périmètre, missions des acteurs impliqués, tarification, critères d’inclusion, médecins requérants et 
+                    médecins requis, rémunération, conditions de réalisation, déroulé de la procédure, outils ARS, tarification, sécurisation des échanges, circuit de facturation, évaluation,…) 
+                    sont précisées dans des cahiers des charges.
+                </p>
+                <p class="lead">La téléassistance</p>
+                <p>La téléassistance médicale a pour objet de permettre à un professionnel médical d’assister à distance un autre professionnel de santé au cours de la réalisation d’un acte.</p>
+                <p class="lead">La régulation</p>
+                <p>La régulation médicale est la réponse médicale apportée dans le cadre de l’activité des centres 15.</p>
             </div>
         </section>
 

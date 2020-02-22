@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS entreprise (
 	entreprise_numero_de_rue integer NOT NULL,
 	entreprise_rue varchar(150) NOT NULL,
 	entreprise_ville varchar(100) NOT NULL,
-	entreprise_code_postal integer NOT NULL,
+	entreprise_code_postal varchar(5) NOT NULL,
   entreprise_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (entreprise_siren)
 );
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS utilisateur (
   utilisateur_numero_de_rue integer NOT NULL,
   utilisateur_rue varchar(75) NOT NULL,
   utilisateur_ville varchar(75) NOT NULL,
-  utilisateur_code_postal integer NOT NULL,
+  utilisateur_code_postal varchar(5) NOT NULL,
   utilisateur_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (utilisateur_id)
 );
@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS utilisateur (
 INSERT INTO utilisateur(utilisateur_id, entreprise_siren, utilisateur_activation, role_id, specialisation_id, utilisateur_nom, utilisateur_prenom, utilisateur_email, utilisateur_telephone, 
   utilisateur_numero_de_rue, utilisateur_rue, utilisateur_ville, utilisateur_code_postal) VALUES
 (1, '123456788', True, 7, 1, 'Keita', 'Cheik-Siramakan', 'cheiksiramakankeita@gmail.com', '0605557802', 57, 'Boulevard de l Yerres', 'Evry-Courcouronnes', 91000),
-(2, '012345678', True, 6, 1, 'Drisse', 'Matthieu', 'mattdrisse@gmail.com', '0600000000', 1, 'Je ne sais pas', 'Campagne', 91000);
+(2, '012345678', True, 7, 6, 'Drisse', 'Matthieu', 'mattdrisse@gmail.com', '0600000000', 1, 'Je ne sais pas', 'Campagne', 91000);
 
 ALTER TABLE authentification
   ADD CONSTRAINT fk_authentification_utilisateur FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (utilisateur_id) ON DELETE CASCADE;

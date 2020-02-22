@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS entreprise (
 	entreprise_numero_de_rue integer NOT NULL,
 	entreprise_rue varchar(150) NOT NULL,
 	entreprise_ville varchar(100) NOT NULL,
-	entreprise_code_postal integer NOT NULL,
+	entreprise_code_postal varchar(5) NOT NULL,
   entreprise_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (entreprise_siren)
 );
@@ -212,7 +212,7 @@ CREATE TABLE IF NOT EXISTS utilisateur (
   utilisateur_numero_de_rue integer NOT NULL,
   utilisateur_rue varchar(75) NOT NULL,
   utilisateur_ville varchar(75) NOT NULL,
-  utilisateur_code_postal integer NOT NULL,
+  utilisateur_code_postal varchar(5) NOT NULL,
   utilisateur_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (utilisateur_id)
 );
