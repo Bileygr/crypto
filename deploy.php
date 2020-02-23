@@ -8,7 +8,7 @@ $pgsql_db = new PDO("pgsql:host=".$settings["pgsql"]["host"].";port=".$settings[
 $pgsql_db->exec(file_get_contents("conf/pgsql/bdd.sql"));
 $mysql_db->exec(file_get_contents("conf/mysql/bdd.sql"));
 
-function generateTelephone() {
+function genererTelephone() {
     $characters = '0123456789';
     $charactersLength = strlen($characters);
     $telephone = '';
@@ -28,7 +28,7 @@ function generateTelephone() {
     return $suffix.$telephone;
 }
 
-function generatePassword() {
+function genererPassword() {
     $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     $pass = array();
     $alphaLength = strlen($alphabet) - 1;
@@ -39,7 +39,7 @@ function generatePassword() {
     return implode($pass);
 }
 
-function contenuBDD($option){
+function genererDataSet($option){
     $userinfo = fopen("conf/userinfo".$option.".html", "w");
     $entreprisedao = new EntrepriseDAO;
     $roledao = new RoleDAO;
@@ -1237,9 +1237,9 @@ function contenuBDD($option){
         $ville = $adresse_complete[$rng3][0];
         $code_postal = $adresse_complete[$rng3][1];
         $email = $nom.$prenom.$i."@telemedecine.com";
-        $mot_de_passe = generatePassword();
+        $mot_de_passe = genererPassword();
 
-        $telephone = generateTelephone();
+        $telephone = genererTelephone();
 
         $cle_secrete = $googleAuthenticator->createSecret();
         $titre = 'Telemedecine ('.$email.')';
@@ -1290,12 +1290,12 @@ function contenuBDD($option){
     fclose($userinfo);
 }
 
-contenuBDD("-mysql");
+genererDataSet("-mysql");
 $contenu_settings = file_get_contents("conf/settings.ini");
 $contenu_settings = preg_replace("/nom\s=\smysql/", "nom = pgsql", $contenu_settings);
 $fh = fopen("conf/settings.ini", "w");
 fwrite($fh, $contenu_settings);
-contenuBDD("-pgsql");
+genererDataSet("-pgsql");
 
 $contenu_settings = file_get_contents("conf/settings.ini");
 $contenu_settings = preg_replace("/nom\s=\spgsql/", "nom = mysql", $contenu_settings);

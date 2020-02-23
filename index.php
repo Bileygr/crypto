@@ -33,7 +33,7 @@ foreach($lesentreprises as $entreprise){
             <td>'.$entreprise->getEmail().'</td>
             <td>'.$entreprise->getTelephone().'</td>
             <td>'.$status_entreprise.'</td>
-            <td><form method="POST"><input type="text" name="siren" value="'.$entreprise->getSIREN().'" hidden>'.$activation_entreprise.'</form></td>
+            <td><form method="POST"><input type="text" name="siren" value="'.$entreprise->getSIREN().'" hidden>'.$activation_entreprise.' <input type="submit" name="suprimmer_entr" value="Suprimmer"></form></td>
         </tr>
     '; 
 }
@@ -59,7 +59,14 @@ foreach($lesutilisateurs as $utilisateur){
             <td>'.$utilisateur->getEntreprise()->getNom().'</td>
             <td>'.$utilisateur->getRole()->getNom().'</td>
             <td>'.$status.'</td>
-            <td><form method="POST"><input type="text" name="id" value="'.$utilisateur->getId().'" hidden>'.$activation.'</form></td>
+            <td style="text-align: center;">
+                <form method="POST">
+                    <input type="text" name="id" value="'.$utilisateur->getId().'" hidden>
+                    '.$activation.' 
+                    <input type="submit" name="modifier" value="Modifier"> 
+                    <input type="submit" name="suprimmer" value="Suprimmer">
+                </form>
+            </td>
         </tr>
     '; 
 }
@@ -74,6 +81,9 @@ if(isset($_SESSION["utilisateur"])){
 
     $nav_links = 
     '
+        <li class="nav-item">
+            <a class="nav-link" href="modifier.php?id='.$utilisateur->getId().'">Modifier vos informations</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" href="deconnexion.php">Déconnexion</a>
         </li>
@@ -96,7 +106,7 @@ if(isset($_SESSION["utilisateur"])){
     if($utilisateur->getRole()->getId() == 6 || $utilisateur->getRole()->getId() == 7){
         $contenu .= 
         "
-        <p><button type=\"button\" id=\"utilisateurs\" value=\"utilisateurs\">Utilisateurs</button> <button type=\"button\" id=\"entreprises\" value=\"entreprises\">Entreprises</button></p>
+            <p><button type=\"button\" id=\"utilisateurs\" value=\"utilisateurs\">Utilisateurs</button> <button type=\"button\" id=\"entreprises\" value=\"entreprises\">Entreprises</button></p>
         ";
 
         $tableau = 
@@ -109,7 +119,7 @@ if(isset($_SESSION["utilisateur"])){
                     <th scope="col">Entreprise</th>
                     <th scope="col">Rôle</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Action</th>
+                    <th scope="col" style="text-align: center;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -204,6 +214,28 @@ if(isset($_POST["desactiver_entr"])){
     $entreprise->setActivation(False);
     $entreprisedao->update($entreprise);
     header("Location: index.php");
+}
+
+if(isset($_POST["suprimmer"])){
+    $utilisateur = $utilisateurdao->delete(["id", $_POST["id"]]);
+    if($utilisateur){
+        header("Location: index.php");
+    }else{
+        echo "Supression a échouée.";
+    }
+}
+
+if(isset($_POST["suprimmer_entr"])){
+    $entreprise = $entreprisedao->delete(["id", $_POST["id"]]);
+    if($entreprise){
+        header("Location: index.php");
+    }else{
+        echo "Supression a échouée.";
+    }
+}
+
+if(isset($_POST["modifier"])){
+    header("Location: modifier.php?id=".$_POST["id"]);
 }
 ?>
 <!DOCTYPE html>

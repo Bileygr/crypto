@@ -95,11 +95,11 @@ class UtilisateurDAO implements CRUD {
                 break;
             case 'date':
                 $requete = $bdd->prepare($sql." WHERE utilisateur_date=?");
-                $requete->execute([$option[1]]);
+                $resultat = $requete->execute([$option[1]]);
                 break;
         }
 
-		return $resultat();
+		return $resultat;
     }
 
     public function read($option){
