@@ -21,7 +21,7 @@ foreach($lesentreprises as $entreprise){
 }
 
 foreach($lesroles as $role) {
-    if($role->getId() != "6" && $role->getId() != "7"){
+    if($role->getId() != "7"){
         $roles .= '<option value="'.$role->getId().'">'.$role->getNom().'</option>';
     }
 }
